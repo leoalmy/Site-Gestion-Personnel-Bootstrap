@@ -27,7 +27,8 @@
 
     <div class="d-grid gap-2 d-md-block mb-2">
       <a class="btn btn-primary" href="index.php?page=accueil" role="button">Accueil</a>
-    
+      <a class="btn btn-primary" href="index.php?page=saisieemploye" role="button">Ajouter un employé</a>
+
     <div class="btn-group">
         <a class="btn btn-primary dropdown-toggle" href="#" role="button"
            data-bs-toggle="dropdown" aria-expanded="false">
