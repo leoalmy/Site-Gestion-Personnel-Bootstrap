@@ -16,10 +16,7 @@ class C_accueil
     {
         // Remplir les données via le menu
         $this->controleurMenu->FillData($this->data);
-        $this->data['css_file'] = "style/v_listeEmployes.css";
-        $this->data['css_footer'] = "style/v_piedPage.css";
 
-        extract($this->data);
         // Inclure la vue
         require_once "vues/v_entete.php";
         require_once "vues/v_accueil.php";

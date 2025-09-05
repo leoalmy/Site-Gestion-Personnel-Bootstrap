@@ -30,10 +30,6 @@
                     ->GetListeService($codeService);
             }
 
-            $this->data['css_file'] = "style/v_listeEmployes.css";
-            $this->data['css_footer'] = "style/v_piedPage.css";
-
-            extract($this->data); // makes array keys into variables
             require_once "vues/v_entete.php";
             require_once "vues/v_listeEmployes.php";
             require_once "vues/v_piedPage.php";
