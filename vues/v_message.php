@@ -1,3 +1,19 @@
-<div class="container">
-    <p class="fs-3 fw-semibold"><?php echo $this->data['leMessage']; ?></p>
-</div> 
+<?php
+// Redirect if no message
+if (empty($this->data['typeMessage'])) {
+    header("Location: index.php?page=accueil");
+    exit();
+}
+?>
+
+<div class="container mt-3">
+    <?php if ($this->data['typeMessage'] === 'error'): ?>
+        <div class="alert alert-danger" role="alert">
+            <?php echo htmlspecialchars($this->data['leMessage']); ?>
+        </div>
+    <?php elseif ($this->data['typeMessage'] === 'success'): ?>
+        <div class="alert alert-success" role="alert">
+            <?php echo htmlspecialchars($this->data['leMessage']); ?>
+        </div>
+    <?php endif; ?>
+</div>

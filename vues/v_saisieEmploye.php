@@ -4,7 +4,8 @@
     <form action="index.php?page=ajoutEmploye" method="post">
         <div class="mb-3">
             <label for="matricule" class="form-label">Matricule :</label>
-            <input type="text" class="form-control" id="matricule" name="matricule" maxlength="4" required>
+            <input type="text" class="form-control" id="matricule" 
+                value="<?= $this->data['nextMatricule'] ?>" readonly>
         </div>
 
         <div class="mb-3">
