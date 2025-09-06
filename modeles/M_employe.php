@@ -4,16 +4,23 @@
 
     class M_employe extends M_generique
     {
-        public function GetListe()
+        public function GetListe($orderBy = "emp_matricule", $direction = "ASC")
         {
             $resultat = array();
             $this->connexion();
 
-            // Join employe with service to get service name
+            $allowedColumns = ["emp_matricule", "emp_nom", "emp_prenom", "emp_service"];
+            if (!in_array($orderBy, $allowedColumns)) {
+                $orderBy = "emp_matricule";
+            }
+
+            $direction = strtoupper($direction) === "DESC" ? "DESC" : "ASC";
+
             $req = "
                 SELECT e.emp_matricule, e.emp_nom, e.emp_prenom, e.emp_service, s.sce_designation AS service_name
                 FROM employe e
                 LEFT JOIN service s ON e.emp_service = s.sce_code
+                ORDER BY $orderBy $direction
             ";
             $res = mysqli_query($this->GetCnx(), $req);
 
@@ -23,7 +30,7 @@
                     $ligne["emp_nom"],
                     $ligne["emp_prenom"],
                     $ligne["emp_service"],
-                    $ligne["service_name"] // now we store the service name
+                    $ligne["service_name"]
                 );
                 $resultat[] = $employe;
             }
@@ -32,20 +39,29 @@
             return $resultat;
         }
 
-        public function GetListeService($code)
+        public function GetListeService($code, $orderBy = 'emp_matricule', $direction = 'ASC')
         {
             $resultat = array();
             $this->connexion();
+            $cnx = $this->GetCnx();
 
-            $code = mysqli_real_escape_string($this->GetCnx(), $code);
+            $code = mysqli_real_escape_string($cnx, $code);
+
+            $allowedColumns = ['emp_matricule', 'emp_nom', 'emp_prenom', 'emp_service'];
+            if (!in_array($orderBy, $allowedColumns)) {
+                $orderBy = 'emp_matricule';
+            }
+
+            $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
 
             $req = "
                 SELECT e.emp_matricule, e.emp_nom, e.emp_prenom, e.emp_service, s.sce_designation AS service_name
                 FROM employe e
                 LEFT JOIN service s ON e.emp_service = s.sce_code
                 WHERE e.emp_service = '$code'
+                ORDER BY $orderBy $direction
             ";
-            $res = mysqli_query($this->GetCnx(), $req);
+            $res = mysqli_query($cnx, $req);
 
             while ($ligne = mysqli_fetch_assoc($res)) {
                 $employe = new Employe(

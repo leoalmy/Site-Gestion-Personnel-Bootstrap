@@ -34,6 +34,6 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-    </form>
+        <button type="submit" class="btn btn-primary" onclick="return confirm('Voulez-vous vraiment sauvegarder les informations ?')">Enregistrer les modifications</button>
+
 </div>

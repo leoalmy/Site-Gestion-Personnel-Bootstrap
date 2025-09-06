@@ -30,6 +30,22 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <button type="submit" class="btn btn-primary" onclick="return confirmAjoutEmploye()">
+            Enregistrer
+        </button>
+
+
+
     </form>
 </div>
+
+<script>
+function confirmAjoutEmploye() {
+    const nom = document.getElementById('nom').value;
+    const prenom = document.getElementById('prenom').value;
+
+    return confirm(
+        `Voulez-vous vraiment ajouter l'employé ${prenom} ${nom} ?`
+    );
+}
+</script>

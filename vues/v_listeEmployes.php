@@ -13,7 +13,6 @@
             // Get the current service code if object exists
             $currentService = 'all';
             if (!empty($this->data['leService'])) {
-                // Assuming $this->data['leService'] is a Service object with GetCode()
                 $currentService = $this->data['leService']->GetCode();
             }
 
@@ -27,10 +26,42 @@
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
             <tr>
-                <th>Matricule</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Service</th>
+                <th>
+                    <a href="index.php?page=listeEmployes&service=<?php echo urlencode($currentService); ?>&orderBy=emp_matricule&direction=<?php echo ($orderBy === 'emp_matricule' && $direction === 'ASC') ? 'DESC' : 'ASC'; ?>"
+                    class="text-light">
+                        Matricule
+                        <?php if ($orderBy === 'emp_matricule'): ?>
+                            <i class="bi bi-caret-<?php echo ($direction === 'ASC') ? 'up' : 'down'; ?>-fill"></i>
+                        <?php endif; ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="index.php?page=listeEmployes&service=<?php echo urlencode($currentService); ?>&orderBy=emp_nom&direction=<?php echo ($orderBy === 'emp_nom' && $direction === 'ASC') ? 'DESC' : 'ASC'; ?>"
+                    class="text-light">
+                        Nom
+                        <?php if ($orderBy === 'emp_nom'): ?>
+                            <i class="bi bi-caret-<?php echo ($direction === 'ASC') ? 'up' : 'down'; ?>-fill"></i>
+                        <?php endif; ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="index.php?page=listeEmployes&service=<?php echo urlencode($currentService); ?>&orderBy=emp_prenom&direction=<?php echo ($orderBy === 'emp_prenom' && $direction === 'ASC') ? 'DESC' : 'ASC'; ?>"
+                    class="text-light">
+                        Prénom
+                        <?php if ($orderBy === 'emp_prenom'): ?>
+                            <i class="bi bi-caret-<?php echo ($direction === 'ASC') ? 'up' : 'down'; ?>-fill"></i>
+                        <?php endif; ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="index.php?page=listeEmployes&service=<?php echo urlencode($currentService); ?>&orderBy=emp_service&direction=<?php echo ($orderBy === 'emp_service' && $direction === 'ASC') ? 'DESC' : 'ASC'; ?>"
+                    class="text-light">
+                        Service
+                        <?php if ($orderBy === 'emp_service'): ?>
+                            <i class="bi bi-caret-<?php echo ($direction === 'ASC') ? 'up' : 'down'; ?>-fill"></i>
+                        <?php endif; ?>
+                    </a>
+                </th>
                 <th>Actions</th>
             </tr>
         </thead>

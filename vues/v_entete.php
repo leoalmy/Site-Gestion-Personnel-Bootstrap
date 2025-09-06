@@ -7,9 +7,6 @@
     <meta http-equiv="Content-Language" content="fr" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
-    
-    <?php if(isset($css_file)) echo '<link rel="stylesheet" href="'.$css_file.'">'; ?>
-    <?php if(isset($css_footer)) echo '<link rel="stylesheet" href="'.$css_footer.'">'; ?>
 
     <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"rel="stylesheet"
@@ -21,6 +18,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ndDqU®Gzau9q]J11fW4pNL1hNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN95405Q"
     crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="style/custom.css">
 
 </head>
 <body>

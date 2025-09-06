@@ -18,16 +18,18 @@
         public function action_listeEmployes($codeService)
         {
             $this->controleurMenu->FillData($this->data) ;
+            $orderBy = $_GET['orderBy'] ?? 'emp_matricule';
+            $direction = $_GET['direction'] ?? 'ASC';
             if ($codeService=="all")
             {
             $this->data['leService']=null;
-            $this->data['lesEmployes']=$this->modeleEmploye->GetListe();
+            $this->data['lesEmployes']=$this->modeleEmploye->GetListe($orderBy, $direction);
             }
             else
             {
                 $this->data['leService']=$this->modeleService->GetService($codeService);
                 $this->data['lesEmployes' ]=$this->modeleEmploye
-                    ->GetListeService($codeService);
+                    ->GetListeService($codeService, $orderBy, $direction);
             }
 
             require_once "vues/v_entete.php";
