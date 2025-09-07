@@ -18,9 +18,9 @@ class C_accueil
         $this->controleurMenu->FillData($this->data);
 
         // Inclure la vue
-        require_once "vues/v_entete.php";
+        require_once "vues/partiels/v_entete.php";
         require_once "vues/v_accueil.php";
-        require_once "vues/v_piedPage.php";
+        require_once "vues/partiels/v_piedPage.php";
     }
 }
 ?>

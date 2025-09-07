@@ -8,12 +8,18 @@
         {
             $resultat=array();
             $this->Connexion();
-            $req="select * from service";
+            $req = "SELECT s.sce_code, s.sce_designation, COUNT(e.emp_matricule) AS nb_employes
+                FROM service s
+                LEFT JOIN employe e ON s.sce_code = e.emp_service
+                GROUP BY s.sce_code, s.sce_designation";
             $res=mysqli_query($this->GetCnx(), $req) ;
             $ligne=mysqli_fetch_assoc($res);
             while ($ligne)
             {
-                $sce=new Service($ligne["sce_code"],$ligne["sce_designation"]);
+                $sce=new Service(
+                    $ligne["sce_code"],
+                    $ligne["sce_designation"],
+                    $ligne["nb_employes"]);
                 $resultat[]=$sce;
                 $ligne=mysqli_fetch_assoc($res);
             }

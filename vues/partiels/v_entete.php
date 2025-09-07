@@ -15,11 +15,11 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ndDqU®Gzau9q]J11fW4pNL1hNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN95405Q"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="style/custom.css">
+    <link rel="stylesheet" href="css/custom.css">
 
 </head>
 <body>
@@ -28,14 +28,15 @@
 
     <div class="d-grid gap-2 d-md-block mb-2">
       <a class="btn btn-primary" href="index.php?page=accueil" role="button">Accueil</a>
-      <a class="btn btn-primary" href="index.php?page=saisieEmploye" role="button">Ajouter un employé</a>
 
     <div class="btn-group">
         <a class="btn btn-primary dropdown-toggle" href="#" role="button"
            data-bs-toggle="dropdown" aria-expanded="false">
-           Liste des employés
+           Employés
         </a>
         <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="index.php?page=saisieEmploye">Ajouter un employé</a></li>
+            <li><hr class="dropdown-divider"></li>
             <?php
             foreach ($this->data["lesServices"] as $unService) {
                 echo '<li><a class="dropdown-item" href="index.php?service='
@@ -50,7 +51,17 @@
                 Tous les services
             </a></li>
         </ul>
-    </div>
+    </div>   
+    <div class="btn-group">
+        <a class="btn btn-primary dropdown-toggle" href="#" role="button"
+           data-bs-toggle="dropdown" aria-expanded="false">
+           Services
+        </a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="index.php?page=saisieService">Ajouter un service</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="index.php?page=listeServices">Liste des services</a></li>
+        </ul>
 </div>
 
   </div> 

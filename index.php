@@ -14,46 +14,76 @@
             break;
 
         case "listeEmployes":
-            require_once "controleurs/C_consulterEmployes.php";
+            require_once "controleurs/employes/C_consulter.php";
             $controleur=new C_consulterEmployes();
             $controleur->action_listeEmployes($_GET['service']);
             break;
 
         case "saisieEmploye":
-            require_once "controleurs/C_ajouterEmploye.php";
+            require_once "controleurs/employes/C_ajouter.php";
             $controleur=new C_ajouterEmploye();
             $controleur->action_saisie(); 
             break;
 
         case "ajoutEmploye":
-            require_once "controleurs/C_ajouterEmploye.php";
+            require_once "controleurs/employes/C_ajouter.php";
             $controleur=new C_ajouterEmploye();
             $controleur->action_ajout($_POST["nom"],$_POST["prenom"], $_POST["service"]); 
             break;
 
         case "supprimerEmploye":
-            require_once "controleurs/C_supprimerEmploye.php";
+            require_once "controleurs/employes/C_supprimer.php";
             $controleur=new C_supprimerEmploye();
             $controleur->action_supprimer($_GET["matricule"]);
             break;
 
         case "modifierEmploye":
-            require_once "controleurs/C_modifierEmploye.php";
+            require_once "controleurs/employes/C_modifier.php";
             $controleur = new C_modifierEmploye();
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Form submitted
-                $controleur->action_modifier(
-                    $_POST['matricule'] ?? null,
-                    $_POST['nom'] ?? null,
-                    $_POST['prenom'] ?? null,
-                    $_POST['service'] ?? null
-                );
+                $controleur->action_modifier();
             } else {
                 // Display form
                 $controleur->action_afficher();
             }
             break;
+
+        case "listeServices":
+            require_once "controleurs/services/C_consulter.php";
+            $controleur = new C_consulterServices();
+            $controleur->action_listeServices();
+            break;
+
+        case "saisieService":
+            require_once "controleurs/services/C_ajouter.php";
+            $controleur = new C_ajouterService();
+            $controleur->action_saisie();
+            break;
+
+        case "ajoutService":
+            require_once "controleurs/services/C_ajouter.php";
+            $controleur = new C_ajouterService();
+            $controleur->action_ajout($_POST["libelle"]);
+            break;
+
+        case "supprimerService":
+            require_once "controleurs/services/C_supprimer.php";
+            $controleur = new C_supprimerService();
+            $controleur->action_supprimer($_GET["code"]);
+            break;
+
+        case "modifierService":
+            require_once "controleurs/services/C_modifier.php";
+            $controleur = new C_modifierService();
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Form submitted
+                $controleur->action_modifier();
+            } else {
+                // Display form
+                $controleur->action_afficher();
+            }
 
         default:
             require_once "controleurs/C_accueil.php";

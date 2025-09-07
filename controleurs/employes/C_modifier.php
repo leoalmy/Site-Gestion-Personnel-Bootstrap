@@ -1,5 +1,5 @@
 <?php
-    require_once "C_menu.php";
+    require_once "controleurs/C_menu.php";
     require_once "modeles/M_employe.php";
     require_once "modeles/M_service.php";
 
@@ -20,7 +20,7 @@
         public function action_afficher()
             {
                 $this->controleurMenu->FillData($this->data);
-                require_once "vues/v_entete.php";
+                require_once "vues/partiels/v_entete.php";
 
                 if (isset($_GET['matricule'])) 
                 {
@@ -30,22 +30,22 @@
                     if ($employe)
                     {
                         $services = $this->modeleService->GetListe();
-                        require_once "vues/v_modifierEmploye.php";
+                        require_once "vues/employes/v_modifier.php";
                     } 
                     else 
                     {
                         $this->data['typeMessage'] = "error";
                         $this->data['leMessage'] = "Employé non trouvé.";
-                        require_once "vues/v_message.php";
+                        require_once "vues/partiels/v_message.php";
                     }
                 } 
                 else 
                 {
                     $this->data['typeMessage'] = "error";
                     $this->data['leMessage'] = "Matricule non spécifié.";
-                    require_once "vues/v_message.php";
+                    require_once "vues/partiels/v_message.php";
                 }
-                require_once "vues/v_piedPage.php";
+                require_once "vues/partiels/v_piedPage.php";
             }
 
         public function action_modifier()
@@ -58,7 +58,9 @@
             if ($matricule && $nom && $prenom && $service) {
                 $ok = $this->modeleEmploye->Modifier($matricule, $nom, $prenom, $service);
                 if ($ok) {
-                    header("Location: index.php?service=all&page=listeEmployes");
+                    $this->data['typeMessage'] = "success";
+                    $this->data['leMessage'] = "L'employé a été modifié avec succès.";
+                    header("Location: index.php?service=all&page=listeEmployes&msg=modified");
                     exit();
                 } else {
                     $this->data['typeMessage'] = "error";
@@ -74,7 +76,7 @@
             $this->data['unEmploye'] = $this->modeleEmploye->GetEmploye($matricule);
             $this->data['lesServices'] = $this->modeleService->GetListe();
             require_once "vues/v_entete.php";
+            require_once "vues/v_message.php";
             require_once "vues/v_modifierEmploye.php";
-            require_once "vues/v_piedPage.php";
         }
     }
