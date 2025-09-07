@@ -58,8 +58,6 @@
             if ($matricule && $nom && $prenom && $service) {
                 $ok = $this->modeleEmploye->Modifier($matricule, $nom, $prenom, $service);
                 if ($ok) {
-                    $this->data['typeMessage'] = "success";
-                    $this->data['leMessage'] = "L'employé a été modifié avec succès.";
                     header("Location: index.php?service=all&page=listeEmployes&msg=modified");
                     exit();
                 } else {

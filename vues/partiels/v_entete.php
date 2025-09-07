@@ -20,6 +20,7 @@
     crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="css/custom.css">
+    <script src="js/main.js"></script>
 
 </head>
 <body>

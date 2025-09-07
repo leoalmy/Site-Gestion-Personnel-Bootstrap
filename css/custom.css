@@ -8,19 +8,19 @@
     transform: scale(1.05);
 }
 
-#employeTable thead th {
+#employeTable #serviceTable thead th {
     position: sticky;
-    top: 0; /* same as table-dark */
+    top: 0;
     z-index: 10;
 }
 
 
-#employeTable thead th a {
+#employeTable #serviceTable thead th a {
     text-decoration: none; /* remove underline by default */
     color: inherit;        /* inherit the white/Bootstrap text color */
 }
 
-#employeTable thead th a:hover {
+#employeTable #serviceTable thead th a:hover {
     text-decoration: underline; /* show underline only on hover */
 }
 

@@ -1,0 +1,37 @@
+🔍 Usability & UX
+
+- Search bar above the table (live search by name, prénom, matricule). ✅
+
+- Pagination if the number of employees grows large. ❌
+
+- Highlight current sorting column (bold or background color). ❌🟠
+
+- Sticky header so table headers stay visible while scrolling. ✅
+
+🎨 UI Enhancements
+
+- Tooltips on action buttons (hover “Modifier” → “Modifier cet employé”). ✅
+
+- Replace text “Modifier / Supprimer” with icons only (Bootstrap icons ✏️ 🗑) + tooltip. ✅
+
+- Add hover row highlight (e.g. light grey background when hovering a row). ❌
+
+📊 Extra Features
+
+- Show total employees per service (e.g., “Fabrication (4 employés)”). ✅
+
+- Add an export button (CSV / Excel / PDF). ❌🟠
+
+- Add an “Ajouter un service” section (if your DB model supports it). ✅
+
+🔐 Safety
+
+- Use a modal confirmation instead of a raw confirm() for “Supprimer” (Bootstrap modal = cleaner, safer). ✅
+
+
+
+#### Legend for task status:
+✅ Done
+🟠 In Progress
+❌ Not Started
+❌🟠 Not Planned 

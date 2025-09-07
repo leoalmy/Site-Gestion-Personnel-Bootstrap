@@ -65,7 +65,7 @@
         case "ajoutService":
             require_once "controleurs/services/C_ajouter.php";
             $controleur = new C_ajouterService();
-            $controleur->action_ajout($_POST["libelle"]);
+            $controleur->action_ajout($_POST["designation"]);
             break;
 
         case "supprimerService":
@@ -84,6 +84,7 @@
                 // Display form
                 $controleur->action_afficher();
             }
+            break;
 
         default:
             require_once "controleurs/C_accueil.php";

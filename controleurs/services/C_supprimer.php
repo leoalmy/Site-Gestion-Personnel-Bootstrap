@@ -20,7 +20,7 @@
             $this->controleurMenu->FillData($this->data) ;
             $ok = $this->modeleService->Supprimer($code);
             if ($ok) {
-                header("Location: index.php?service=all&page=listeServices&msg=deleted");
+                header("Location: index.php?page=listeServices&msg=deleted");
                 exit();
             } else {
                 $this->data['typeMessage'] = "error";

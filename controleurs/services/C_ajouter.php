@@ -16,18 +16,22 @@
         }
 
         public function action_saisie()
-        { 
+        {
+            $this->data['nextCode'] = $this->modeleService->GenererCode();
             $this->controleurMenu->FillData($this->data) ;
             require_once "vues/partiels/v_entete.php";
             require_once "vues/services/v_saisie.php";
+            require_once "vues/partiels/v_modalConfirm.php";
             require_once "vues/partiels/v_piedPage.php";
         }
 
-        public function action_ajout($libelle)
+        public function action_ajout($designation)
         {
             $this->controleurMenu->FillData($this->data) ;
-            $ok = $this->modeleService->Ajouter($libelle);
+            $ok = $this->modeleService->Ajouter($designation);
             if ($ok) {
+                $this->data['typeMessage'] = "success";
+                $this->data['leMessage'] = "Service ajouté avec succès.";
                 header("Location: index.php?service=all&page=listeServices&msg=added");
                 exit();
             } else {

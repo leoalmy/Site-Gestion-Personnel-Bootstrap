@@ -1,0 +1,57 @@
+project-root/
+│── index.php                # Entry point with router
+│── config/
+│   └── database.php         # DB credentials, constants
+│
+│── controleurs/             # Controllers
+│   │── BaseController.php   # New: common rendering, flash, etc.
+│   │── C_accueil.php
+│   │── C_menu.php
+│   │── employes/
+│   │   ├── C_ajouter.php
+│   │   ├── C_modifier.php
+│   │   ├── C_supprimer.php
+│   │   └── C_consulter.php
+│   │── services/
+│       ├── C_ajouter.php
+│       ├── C_modifier.php
+│       ├── C_supprimer.php
+│       └── C_consulter.php
+│
+│── modeles/                 # Models
+│   │── M_generique.php      # Base model: DB connection
+│   │── M_employe.php
+│   │── M_service.php
+│   └── Utils.php            # New: helpers like GenererMatricule, GenererCode
+│
+│── vues/
+│   │── partiels/            # Reusable pieces
+│   │   ├── v_entete.php
+│   │   ├── v_piedPage.php
+│   │   ├── v_menu.php
+│   │   ├── v_flashMessage.php   # New: replaces v_message with session flashes
+│   │   └── v_modalConfirm.php
+│   │
+│   │── employes/
+│   │   ├── v_liste.php
+│   │   ├── v_saisie.php
+│   │   └── v_modifier.php
+│   │
+│   │── services/
+│   │   ├── v_liste.php
+│   │   ├── v_saisie.php
+│   │   └── v_modifier.php
+│   │
+│   └── accueil/
+│       └── v_accueil.php
+│
+│── public/                  # Assets
+│   ├── css/
+│   ├── js/
+│   └── images/
+│
+│── docs/                    # 📌 Documentation
+│   ├── README.md            # Main documentation
+│   └── ARCHITECTURE.md      # Optional: technical details
+│
+└── vendor/                  # Composer (optional, if you later add autoloading)
