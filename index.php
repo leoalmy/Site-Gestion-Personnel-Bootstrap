@@ -1,95 +1,103 @@
 <?php
+    $routes = [
+        "accueil" => [
+            "file" => "controleurs/C_accueil.php",
+            "class" => "C_accueil",
+            "method" => "action_afficher",
+            "params" => []
+        ],
 
-    if (!empty($_GET['page'])) {
-        $page = $_GET['page'];
+        "listeEmployes" => [
+            "file" => "controleurs/employes/C_consulter.php",
+            "class" => "C_consulterEmployes",
+            "method" => "action_listeEmployes",
+            "params" => [$_GET['service'] ?? null]
+        ],
+
+        "saisieEmploye" => [
+            "file" => "controleurs/employes/C_ajouter.php",
+            "class" => "C_ajouterEmploye",
+            "method" => "action_saisie",
+            "params" => []
+        ],
+
+        "ajoutEmploye" => [
+            "file" => "controleurs/employes/C_ajouter.php",
+            "class" => "C_ajouterEmploye",
+            "method" => "action_ajout",
+            "params" => [
+                $_POST['nom'] ?? null,
+                $_POST['prenom'] ?? null,
+                $_POST['service'] ?? null
+            ]
+        ],
+
+        "supprimerEmploye" => [
+            "file" => "controleurs/employes/C_supprimer.php",
+            "class" => "C_supprimerEmploye",
+            "method" => "action_supprimer",
+            "params" => [$_GET['matricule'] ?? null]
+        ],
+
+        "modifierEmploye" => [
+            "file" => "controleurs/employes/C_modifier.php",
+            "class" => "C_modifierEmploye",
+            "method" => ($_SERVER['REQUEST_METHOD'] === 'POST') 
+                ? "action_modifier" 
+                : "action_afficher",
+            "params" => []
+        ],
+
+        "listeServices" => [
+            "file" => "controleurs/services/C_consulter.php",
+            "class" => "C_consulterServices",
+            "method" => "action_listeServices",
+            "params" => []
+        ],
+
+        "saisieService" => [
+            "file" => "controleurs/services/C_ajouter.php",
+            "class" => "C_ajouterService",
+            "method" => "action_saisie",
+            "params" => []
+        ],
+
+        "ajoutService" => [
+            "file" => "controleurs/services/C_ajouter.php",
+            "class" => "C_ajouterService",
+            "method" => "action_ajout",
+            "params" => [$_POST['designation'] ?? null]
+        ],
+
+        "supprimerService" => [
+            "file" => "controleurs/services/C_supprimer.php",
+            "class" => "C_supprimerService",
+            "method" => "action_supprimer",
+            "params" => [$_GET['code'] ?? null]
+        ],
+
+        "modifierService" => [
+            "file" => "controleurs/services/C_modifier.php",
+            "class" => "C_modifierService",
+            "method" => ($_SERVER['REQUEST_METHOD'] === 'POST') 
+                ? "action_modifier" 
+                : "action_afficher",
+            "params" => []
+        ]
+    ];
+
+
+    $page = $_GET['page'] ?? 'accueil';
+
+    if (isset($routes[$page])) {
+        $route = $routes[$page];
+        require_once $route['file'];
+        $controller = new $route['class'];
+        call_user_func_array([$controller, $route['method']], $route['params']);
     } else {
-        $page = "accueil";
-    }
-
-    switch ($page) {
-        case "accueil":
-            require_once "controleurs/C_accueil.php";
-            $controleur = new C_accueil();
-            $controleur->action_afficher();
-            break;
-
-        case "listeEmployes":
-            require_once "controleurs/employes/C_consulter.php";
-            $controleur=new C_consulterEmployes();
-            $controleur->action_listeEmployes($_GET['service']);
-            break;
-
-        case "saisieEmploye":
-            require_once "controleurs/employes/C_ajouter.php";
-            $controleur=new C_ajouterEmploye();
-            $controleur->action_saisie(); 
-            break;
-
-        case "ajoutEmploye":
-            require_once "controleurs/employes/C_ajouter.php";
-            $controleur=new C_ajouterEmploye();
-            $controleur->action_ajout($_POST["nom"],$_POST["prenom"], $_POST["service"]); 
-            break;
-
-        case "supprimerEmploye":
-            require_once "controleurs/employes/C_supprimer.php";
-            $controleur=new C_supprimerEmploye();
-            $controleur->action_supprimer($_GET["matricule"]);
-            break;
-
-        case "modifierEmploye":
-            require_once "controleurs/employes/C_modifier.php";
-            $controleur = new C_modifierEmploye();
-
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                // Form submitted
-                $controleur->action_modifier();
-            } else {
-                // Display form
-                $controleur->action_afficher();
-            }
-            break;
-
-        case "listeServices":
-            require_once "controleurs/services/C_consulter.php";
-            $controleur = new C_consulterServices();
-            $controleur->action_listeServices();
-            break;
-
-        case "saisieService":
-            require_once "controleurs/services/C_ajouter.php";
-            $controleur = new C_ajouterService();
-            $controleur->action_saisie();
-            break;
-
-        case "ajoutService":
-            require_once "controleurs/services/C_ajouter.php";
-            $controleur = new C_ajouterService();
-            $controleur->action_ajout($_POST["designation"]);
-            break;
-
-        case "supprimerService":
-            require_once "controleurs/services/C_supprimer.php";
-            $controleur = new C_supprimerService();
-            $controleur->action_supprimer($_GET["code"]);
-            break;
-
-        case "modifierService":
-            require_once "controleurs/services/C_modifier.php";
-            $controleur = new C_modifierService();
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                // Form submitted
-                $controleur->action_modifier();
-            } else {
-                // Display form
-                $controleur->action_afficher();
-            }
-            break;
-
-        default:
-            require_once "controleurs/C_accueil.php";
-            $controleur = new C_accueil();
-            $controleur->action_afficher();
-            break;
+        // Fallback to accueil
+        require_once "controleurs/C_accueil.php";
+        $controller = new C_accueil();
+        $controller->action_afficher();
     }
 ?>
