@@ -1,10 +1,19 @@
 <div class="container my-4">
+    <!--- Titre de la page --->
     <h2 class="mb-4">Liste des Services</h2>
+
+    <!-- 🔍 Search bar -->
+    <div class="d-flex mb-3">
+        <input type="text" id="searchInput" class="form-control me-2" placeholder="Rechercher un service...">
+        <button id="clearSearch" class="btn btn-secondary" style="display: none;">✕</button>
+    </div>
+
+    <!--- Tableau des services --->
     <table class="table table-striped table-bordered" id="serviceTable">
         <thead class="table-dark">
             <tr>
                 <th>Code</th>
-                <th>Nom</th>
+                <th>Désignation</th>
                 <th>Nombre d'employés</th>
                 <th>Actions</th>
             </tr>
@@ -58,6 +67,52 @@
                     window.location.href = href;
                 };
             });
+        });
+    });
+
+    // Live search functionality
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const table = document.getElementById("serviceTable");
+        const rows = table.getElementsByTagName("tr");
+        const totalCell = document.getElementById("totalCount");
+
+        function normalize(str) {
+            return str
+                .normalize("NFD") // split letters and accents
+                .replace(/[\u0300-\u036f]/g, "") // remove accents
+                .toLowerCase();
+        }
+
+        searchInput.addEventListener("keyup", function () {
+            const filter = normalize(searchInput.value);
+            let visibleCount = 0;
+
+            for (let i = 1; i < rows.length - 1; i++) { // skip header/footer
+                const cells = rows[i].getElementsByTagName("td");
+                if (cells.length > 0) {
+                    const matricule = normalize(cells[0].textContent);
+                    const designation = normalize(cells[1].textContent);
+
+                    if (
+                        matricule.includes(filter) ||
+                        designation.includes(filter)
+                    ) {
+                        rows[i].style.display = "";
+                        visibleCount++;
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+
+            if (visibleCount == 1) {
+                totalCell.textContent = "Total: 1 service";
+            } else {
+            totalCell.textContent = "Total: " + visibleCount + " services";
+            }
+
+            document.getElementById("clearSearch").style.display = filter ? 'inline-block' : 'none';
         });
     });
 </script>
