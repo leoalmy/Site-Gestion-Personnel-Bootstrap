@@ -89,7 +89,7 @@
             "file" => "controleurs/utilisateurs/C_connexion.php",
             "class" => "C_connexion",
             "method" => ($_SERVER['REQUEST_METHOD'] === 'POST') 
-                ? "action_login" 
+                ? "action_connexion" 
                 : "action_afficher",
             "params" => []
         ],

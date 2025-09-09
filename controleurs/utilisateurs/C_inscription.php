@@ -1,5 +1,6 @@
 <?php
     require_once "controleurs/C_menu.php";
+    require_once "modeles/M_utilisateur.php";
 
     class C_inscription
     {
@@ -10,6 +11,7 @@
         {
             $this->data = array();
             $this->controleurMenu = new C_menu();
+            $this->modeleUtilisateur = new M_utilisateur();
         }
 
         public function action_afficher()
@@ -23,13 +25,36 @@
             require_once "vues/partiels/v_piedPage.php";
         }
 
-        public function action_inscrire($email, $password, $confirmPassword)
+        public function action_inscrire()
         {
+            $email = $_POST['login'];
+            $password = $_POST['mdp'];
+            $confirmpassword = $_POST['mdpConf'];
+
             // à faire : valider et enregistrer les informations d'inscription
             $this->controleurMenu->FillData($this->data);
 
             // Pour l'instant, rediriger vers la page de connexion après "inscription"
-            header("Location: index.php?page=connexion");
+            if ($password === $confirmpassword) {
+                $success = $this->modeleUtilisateur->AjouterUtilisateur($email, $password);
+                if ($success) {
+                    header("Location: index.php?page=connexion");
+                } else {
+                    $this->data['typeMessage'] = "error";
+                    $this->data['leMessage'] = "L'email est déjà utilisé.";
+                    require_once "vues/partiels/v_entete.php";
+                    require_once "vues/utilisateurs/v_inscription.php";
+                    require_once "vues/partiels/v_message.php";
+                    require_once "vues/partiels/v_piedPage.php";
+                }
+            } else {
+                $this->data['typeMessage'] = "error";
+                $this->data['leMessage'] = "Les mots de passe ne correspondent pas.";
+                require_once "vues/partiels/v_entete.php";
+                require_once "vues/utilisateurs/v_inscription.php";
+                require_once "vues/partiels/v_message.php";
+                require_once "vues/partiels/v_piedPage.php";
+            }
             exit();
         }
     }
