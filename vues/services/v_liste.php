@@ -25,7 +25,7 @@
                     <td><?php echo htmlspecialchars($service->GetDesignation()); ?></td>
                     <td><?php echo htmlspecialchars($service->GetNbEmployes()); ?></td>
                     <td>
-                        <a href="index.php?page=modifierService&code=<?php echo urlencode($service->GetCode()); ?>" class="btn btn-primary btn-sm"><i class="bi bi-pencil"></i></a>
+                        <a href="index.php?page=modifierService&code=<?php echo urlencode($service->GetCode()); ?>" class="btn btn-primary btn-sm" data-bs-title="Modifier ce service"><i class="bi bi-pencil"></i></a>
                         <a href="#" 
                             class="btn btn-danger btn-sm delete-btn" 
                             data-bs-toggle="modal" 
@@ -106,13 +106,26 @@
                 }
             }
 
-            if (visibleCount == 1) {
-                totalCell.textContent = "Total: 1 service";
+            if (visibleCount <= 1) {
+                totalCell.textContent = "Total: " + visibleCount + " service";
             } else {
             totalCell.textContent = "Total: " + visibleCount + " services";
             }
 
             document.getElementById("clearSearch").style.display = filter ? 'inline-block' : 'none';
+        });
+
+        // Clear search button functionality
+        document.getElementById("clearSearch").addEventListener("click", function () {
+            document.getElementById("searchInput").value = "";
+            document.getElementById("searchInput").dispatchEvent(new Event('keyup'));
+            this.style.display = 'none';
+        });
+
+        // Initialize Bootstrap tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-title]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     });
 </script>

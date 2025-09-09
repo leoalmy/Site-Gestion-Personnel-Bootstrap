@@ -83,6 +83,38 @@
                 ? "action_modifier" 
                 : "action_afficher",
             "params" => []
+        ],
+
+        "connexion" => [
+            "file" => "controleurs/utilisateurs/C_connexion.php",
+            "class" => "C_connexion",
+            "method" => ($_SERVER['REQUEST_METHOD'] === 'POST') 
+                ? "action_login" 
+                : "action_afficher",
+            "params" => []
+        ],
+
+        "deconnexion" => [
+            "file" => "controleurs/utilisateurs/C_deconnexion.php",
+            "class" => "C_deconnexion",
+            "method" => "action_deconnexion",
+            "params" => []
+        ],
+
+        "inscription" => [
+            "file" => "controleurs/utilisateurs/C_inscription.php",
+            "class" => "C_inscription",
+            "method" => ($_SERVER['REQUEST_METHOD'] === 'POST') 
+                ? "action_inscrire" 
+                : "action_afficher",
+            "params" => []
+        ],
+
+        "profil" => [
+            "file" => "controleurs/utilisateurs/C_profil.php",
+            "class" => "C_profil",
+            "method" => "action_afficher",
+            "params" => []
         ]
     ];
 

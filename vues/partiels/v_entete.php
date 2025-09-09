@@ -19,8 +19,8 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="css/custom.css" type="text/css" />
-    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="public/css/custom.css" type="text/css" />
+    <script src="public/js/main.js"></script>
 
 </head>
 <body>
@@ -63,6 +63,8 @@
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="index.php?page=listeServices">Liste des services</a></li>
         </ul>
-</div>
-
-  </div> 
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-primary" href="index.php?page=connexion" role="button">Connexion</a>
+    </div>
+  </div>

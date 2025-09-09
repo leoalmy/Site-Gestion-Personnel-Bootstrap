@@ -191,7 +191,11 @@
                 }
             }
 
+            if (visibleCount <= 1) {
+                totalCell.textContent = "Total: " + visibleCount + " employé";
+            } else {
             totalCell.textContent = "Total: " + visibleCount + " employés";
+            }
 
             document.getElementById("clearSearch").style.display = filter ? 'inline-block' : 'none';
         });
