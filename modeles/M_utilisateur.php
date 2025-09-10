@@ -60,7 +60,7 @@
             if ($result && $row = $result->fetch_assoc()) {
                 // Vérifier le mot de passe hashé
                 if (password_verify($mdp, $row['mdp'])) {
-                    $utilisateur = new Utilisateurs($row['email']);
+                    $utilisateur = new Utilisateurs($row['email'], $row['dateInscription'], $row['role']);
                     $stmt->close();
                     $this->deconnexion();
                     return $utilisateur; // Succès

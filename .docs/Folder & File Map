@@ -13,15 +13,21 @@ project-root/
 │   │   ├── C_supprimer.php
 │   │   └── C_consulter.php
 │   │── services/
-│       ├── C_ajouter.php
-│       ├── C_modifier.php
-│       ├── C_supprimer.php
-│       └── C_consulter.php
+│   │   ├── C_ajouter.php
+│   │   ├── C_modifier.php
+│   │   ├── C_supprimer.php
+│   │   └── C_consulter.php
+│   │── utilisateurs/
+│       ├── C_connexion.php
+│       ├── C_deconnexion.php
+│       ├── C_inscription.php
+│       └── C_profil.php
 │
 │── modeles/                 # Models
 │   │── M_generique.php      # Base model: DB connection
 │   │── M_employe.php
 │   │── M_service.php
+│   │── M_utilisateur.php
 │   └── Utils.php            # New: helpers like GenererMatricule, GenererCode
 │
 │── vues/
@@ -41,6 +47,11 @@ project-root/
 │   │   ├── v_liste.php
 │   │   ├── v_saisie.php
 │   │   └── v_modifier.php
+│   │
+│   │── utilisateurs/
+│   │   ├── v_connexion.php
+│   │   ├── v_inscription.php
+│   │   └── v_profil.php
 │   │
 │   └── accueil/
 │       └── v_accueil.php

@@ -22,6 +22,9 @@ class C_connexion
 
         // Inclure la vue
         require_once "vues/partiels/v_entete.php";
+        if (isset($this->data['typeMessage']) && isset($this->data['leMessage'])) {
+            require_once "vues/partiels/v_message.php";
+        }
         require_once "vues/utilisateurs/v_connexion.php";
         require_once "vues/partiels/v_piedPage.php";
     }
@@ -34,17 +37,17 @@ class C_connexion
         $user = $this->modeleUtilisateur->ConnexionUtilisateur($email, $password);
         
         if ($user) {
-            echo "✅ Bienvenue " . $user->GetEmail();
-            // Ici tu pourrais démarrer une session : $_SESSION['user'] = $user;
-            // header("Location: index.php?page=profil");
+            session_start();
+            $_SESSION['user'] = $user;
+            header("Location: index.php?page=profil");
         } else {
-            echo "❌ Email ou mot de passe incorrect";
+            $this->data['typeMessage'] = "error";
+            $this->data['leMessage'] = "❌ Email ou mot de passe incorrect.";
+            $this->action_afficher();
         }
 
-        // à faire : vérifier les informations d'identification
         $this->controleurMenu->FillData($this->data);
 
-        
         exit();
     }
 }
