@@ -1,4 +1,7 @@
 <?php
+    require_once "metiers/Utilisateurs.php";
+    session_start();
+
     $routes = [
         "accueil" => [
             "file" => "controleurs/C_accueil.php",

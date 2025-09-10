@@ -4,51 +4,71 @@
 
     class M_utilisateur extends M_generique
     {
-        public function AjouterUtilisateur($email, $mdp)
+        public function AjouterUtilisateur($nom, $prenom, $email, $mdp, $tel)
         {
-            $this->connexion();
-            $cnx = $this->GetCnx();
+            try {
+                $this->connexion();
+                $cnx = $this->GetCnx();
 
-            // Vérifier si l'email existe déjà
-            $check = $cnx->prepare("SELECT email FROM user WHERE email = ?");
-            if (!$check) {
-                die("Erreur prepare SELECT : " . $cnx->error);
-            }
-            $check->bind_param("s", $email);
-            $check->execute();
-            $check->store_result();
+                if (!$cnx) {
+                    throw new Exception("Erreur de connexion à la base : " . $cnx->connect_error);
+                }
 
-            if ($check->num_rows > 0) {
+                // Vérifier si l'email existe déjà
+                $check = $cnx->prepare("SELECT COUNT(*) as cnt FROM user WHERE email = ?");
+                if (!$check) {
+                    throw new Exception("Erreur prepare SELECT : " . $cnx->error);
+                }
+                $check->bind_param("s", $email);
+                $check->execute();
+                $check->bind_result($count);
+                $check->fetch();
                 $check->close();
+
+                if ($count > 0) {
+                    $this->deconnexion();
+                    return false; // Email déjà utilisé
+                }
+
+                // Hacher le mot de passe
+                $hashedMdp = password_hash($mdp, PASSWORD_BCRYPT);
+
+                // Préparer l'INSERT
+                $stmt = $cnx->prepare(
+                    "INSERT INTO user (nom, prenom, email, mdp, telephone, dateInscription, role) 
+                    VALUES (?, ?, ?, ?, ?, CURDATE(), 'membre')"
+                );
+                if (!$stmt) {
+                    throw new Exception("Erreur prepare INSERT : " . $cnx->error);
+                }
+
+                // Si téléphone vide, mettre NULL
+                $tel = !empty($tel) ? preg_replace('/[\s\-]/', '', $tel) : NULL;
+
+                $stmt->bind_param("sssss", $nom, $prenom, $email, $hashedMdp, $tel);
+
+                if (!$stmt->execute()) {
+                    throw new Exception("Erreur execute INSERT : " . $stmt->error);
+                }
+
+                $stmt->close();
                 $this->deconnexion();
-                return false; // Email déjà utilisé
+
+                return true; // insertion réussie
+
+            } catch (Exception $e) {
+                $this->deconnexion();
+                // Affiche l'erreur pour debug, tu peux aussi logger
+                echo "Erreur : " . $e->getMessage();
+                return false;
             }
-            $check->close();
-
-            // Hacher le mot de passe avec bcrypt
-            $hashedMdp = password_hash($mdp, PASSWORD_BCRYPT);
-
-            // Préparer la requête d'insertion
-            $stmt = $cnx->prepare("INSERT INTO user (email, mdp) VALUES (?, ?)");
-            if (!$stmt) {
-                die("Erreur prepare INSERT : " . $cnx->error);
-            }
-            $stmt->bind_param("ss", $email, $hashedMdp);
-
-            $res = $stmt->execute();
-
-            $stmt->close();
-            $this->deconnexion();
-
-            return $res; // true si insertion OK, false sinon
         }
 
         public function ConnexionUtilisateur($email, $mdp) {
             $this->connexion();
             $cnx = $this->GetCnx();
 
-            // Préparer la requête pour chercher l'utilisateur
-            $stmt = $cnx->prepare("SELECT email, mdp FROM user WHERE email = ?");
+            $stmt = $cnx->prepare("SELECT nom, prenom, email, mdp, telephone, dateInscription, role FROM user WHERE email = ?");
             if (!$stmt) {
                 die("Erreur prepare SELECT : " . $cnx->error);
             }
@@ -58,12 +78,18 @@
             $result = $stmt->get_result();
 
             if ($result && $row = $result->fetch_assoc()) {
-                // Vérifier le mot de passe hashé
                 if (password_verify($mdp, $row['mdp'])) {
-                    $utilisateur = new Utilisateurs($row['email'], $row['dateInscription'], $row['role']);
+                    $utilisateur = new Utilisateurs(
+                        $row['nom'], 
+                        $row['prenom'], 
+                        $row['email'], 
+                        $row['dateInscription'], 
+                        $row['role'], 
+                        $row['telephone']
+                    );
                     $stmt->close();
                     $this->deconnexion();
-                    return $utilisateur; // Succès
+                    return $utilisateur;
                 } else {
                     $stmt->close();
                     $this->deconnexion();
@@ -75,6 +101,5 @@
                 return false; // Email non trouvé
             }
         }
-
     }
 ?>

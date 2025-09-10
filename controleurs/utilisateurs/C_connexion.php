@@ -37,7 +37,6 @@ class C_connexion
         $user = $this->modeleUtilisateur->ConnexionUtilisateur($email, $password);
         
         if ($user) {
-            session_start();
             $_SESSION['user'] = $user;
             header("Location: index.php?page=profil");
         } else {

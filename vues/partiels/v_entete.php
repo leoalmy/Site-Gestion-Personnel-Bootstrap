@@ -23,13 +23,15 @@
     <script src="public/js/main.js"></script>
 
 </head>
-<body>
+<header class="bg-dark text-light py-3 shadow">
   <div class="container">
     <h1>Gestion du personnel</h1>
 
-    <div class="d-grid gap-2 d-md-block mb-2">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
       <a class="btn btn-primary" href="index.php?page=accueil" role="button">Accueil</a>
 
+    
     <div class="btn-group">
         <a class="btn btn-primary dropdown-toggle" href="#" role="button"
            data-bs-toggle="dropdown" aria-expanded="false">
@@ -64,7 +66,21 @@
             <li><a class="dropdown-item" href="index.php?page=listeServices">Liste des services</a></li>
         </ul>
     </div>
-    <div class="btn-group">
-      <a class="btn btn-primary" href="index.php?page=connexion" role="button">Connexion</a>
+          </div>
+          <div>
+            <?php if(empty($_SESSION['user'])) { ?>
+              <div class="btn-group">
+                <a class="btn btn-primary" href="index.php?page=connexion" role="button">Connexion</a>
+              </div>
+              <div class="btn-group">
+                <a class="btn btn-primary" href="index.php?page=inscription" role="button">Inscription</a>
+              </div>
+            <?php } else { ?>
+              <div class="btn-group">
+                <a class="btn btn-primary" href="index.php?page=deconnexion" role="button">Déconnexion</a>
+              </div>
+            <?php } ?>
     </div>
   </div>
+</header>
+<body>

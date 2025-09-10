@@ -14,7 +14,8 @@
 
         public function action_deconnexion()
         {
-            // à faire
+            $_SESSION['user'] = null;
+            header('Location: index.php?page=accueil');
         }
     }
 ?>
