@@ -1,23 +1,19 @@
 <?php
-    require_once "controleurs/C_menu.php";
+    require_once "controleurs/C_base.php";
     require_once "modeles/M_service.php";
 
-    class C_supprimerService
+    class C_supprimerService extends C_base
     {
-        private $data;
-        private $controleurMenu;
         private $modeleService;
 
         public function __construct()
         {
-            $this->data=array();
-            $this->controleurMenu=new C_menu();
+            parent::__construct();
             $this->modeleService=new M_service();
         }
 
         public function action_supprimer($code)
         {
-            $this->controleurMenu->FillData($this->data) ;
             $ok = $this->modeleService->Supprimer($code);
             if ($ok) {
                 header("Location: index.php?page=listeServices&msg=deleted");

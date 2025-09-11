@@ -1,25 +1,19 @@
 <?php
-require_once "controleurs/C_menu.php";
-require_once "modeles/M_utilisateur.php";
+require_once "controleurs/C_base.php";
+require_once "modeles/M_Utilisateur.php";
 
-class C_connexion
+class C_connexion extends C_base
 {
-    private $data;
-    private $controleurMenu;
     private $modeleUtilisateur;
 
     public function __construct()
     {
-        $this->data = array();
-        $this->controleurMenu = new C_menu();
+        parent::__construct();
         $this->modeleUtilisateur = new M_utilisateur();
     }
 
     public function action_afficher()
     {
-        // Remplir les données via le menu
-        $this->controleurMenu->FillData($this->data);
-
         // Inclure la vue
         require_once "vues/partiels/v_entete.php";
         if (isset($this->data['typeMessage']) && isset($this->data['leMessage'])) {
@@ -44,8 +38,6 @@ class C_connexion
             $this->data['leMessage'] = "❌ Email ou mot de passe incorrect.";
             $this->action_afficher();
         }
-
-        $this->controleurMenu->FillData($this->data);
 
         exit();
     }

@@ -1,21 +1,20 @@
 <?php
-    require_once "controleurs/C_menu.php";
+    require_once "controleurs/C_base.php";
     require_once "modeles/M_employe.php";
 
-    class C_supprimerEmploye
+    class C_supprimerEmploye extends C_base
     {
-        private $data = array();
+        private $modeleEmploye;
 
         public function __construct()
         {
-            $this->data = array();
+            parent::__construct();
             $this->controleurMenu = new C_menu();
+            $this->$modeleEmploye = new M_employe();
         }
 
         public function action_supprimer($matricule)
         {
-            $this->controleurMenu->FillData($this->data);
-            $modeleEmploye = new M_employe();
             $ok = $modeleEmploye->Supprimer($matricule);
             if ($ok) {
                 header("Location: index.php?service=all&page=listeEmployes&msg=deleted");

@@ -1,4 +1,4 @@
-<footer class="bg-dark text-light py-3 shadow fixed-bottom">
+<footer class="bg-dark text-light py-3 shadow" style="margin-top: auto">
   <div class="container d-flex justify-content-between align-items-center flex-wrap">
 
     <!-- Left side -->

@@ -42,8 +42,8 @@
                     throw new Exception("Erreur prepare INSERT : " . $cnx->error);
                 }
 
-                // Si téléphone vide, mettre NULL
-                $tel = !empty($tel) ? preg_replace('/[\s\-]/', '', $tel) : NULL;
+                // Enlève les espaces dans le numéro de téléphone envoyé
+                $tel = preg_replace('/[\s\-]/', '', $tel);
 
                 $stmt->bind_param("sssss", $nom, $prenom, $email, $hashedMdp, $tel);
 

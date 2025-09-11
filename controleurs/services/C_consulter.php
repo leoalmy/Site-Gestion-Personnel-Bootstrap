@@ -1,17 +1,14 @@
 <?php
-    require_once "controleurs/C_menu.php";
+    require_once "controleurs/C_base.php";
     require_once "modeles/M_service.php";
 
-    class C_consulterServices
+    class C_consulterServices extends C_base
     {
-        private $data;
-        private $controleurMenu;
         private $modeleService;
 
         public function __construct()
         {
-            $this->data=array();
-            $this->controleurMenu=new C_menu();
+            parent::__construct();
             $this->modeleService=new M_service();
         }
 
@@ -30,7 +27,6 @@
                 $this->data['leMessage'] = "Le service a été ajouté avec succès.";
             }
 
-            $this->controleurMenu->FillData($this->data) ;
             $this->data['lesServices']=$this->modeleService->GetListe();
             require_once "vues/partiels/v_entete.php";
             if (isset($_GET['msg'])) {

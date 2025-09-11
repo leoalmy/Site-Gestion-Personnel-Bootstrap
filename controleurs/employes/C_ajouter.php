@@ -1,24 +1,20 @@
 <?php
-    require_once "controleurs/C_menu.php";
+    require_once "controleurs/C_base.php";
     require_once "modeles/M_employe.php";
 
-    class C_ajouterEmploye
+    class C_ajouterEmploye extends C_base
     {
-        private $data;
-        private $controleurMenu;
         private $modeleEmploye;
 
         public function __construct()
         {
-            $this->data=array();
-            $this->controleurMenu=new C_menu();
+            parent::__construct();
             $this->modeleEmploye=new M_employe();
         }
 
         public function action_saisie()
         { 
             $this->data['nextMatricule'] = $this->modeleEmploye->GenererMatricule();
-            $this->controleurMenu->FillData($this->data) ;
             require_once "vues/partiels/v_entete.php";
             require_once "vues/employes/v_saisie.php";
             require_once "vues/partiels/v_piedPage.php";
@@ -26,7 +22,6 @@
 
         public function action_ajout($nom, $prenom, $service)
         {
-            $this->controleurMenu->FillData($this->data) ;
             $ok = $this->modeleEmploye->Ajouter($nom, $prenom, $service);
             if ($ok) {
                 header("Location: index.php?service=all&page=listeEmployes&msg=added");

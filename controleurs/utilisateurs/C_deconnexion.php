@@ -1,15 +1,11 @@
 <?php
-    require_once "controleurs/C_menu.php";
+    require_once "controleurs/C_base.php";
 
-    class C_deconnexion
+    class C_deconnexion extends C_base
     {
-        private $data;
-        private $controleurMenu;
-
         public function __construct()
         {
-            $this->data = array();
-            $this->controleurMenu = new C_menu();
+            parent::__construct();
         }
 
         public function action_deconnexion()

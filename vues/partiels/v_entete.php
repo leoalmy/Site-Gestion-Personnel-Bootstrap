@@ -31,9 +31,9 @@
     <div>
       <a class="btn btn-primary" href="index.php?page=accueil" role="button">Accueil</a>
 
-    
+    <?php if($this->data['isLoggedOn']) { ?>
     <div class="btn-group">
-        <a class="btn btn-primary dropdown-toggle" href="#" role="button"
+        <a class="btn btn-primary dropdown-toggle" role="button"
            data-bs-toggle="dropdown" aria-expanded="false">
            Employés
         </a>
@@ -55,32 +55,36 @@
             </a></li>
         </ul>
     </div>   
-    <div class="btn-group">
-        <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-           data-bs-toggle="dropdown" aria-expanded="false">
-           Services
-        </a>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="index.php?page=saisieService">Ajouter un service</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="index.php?page=listeServices">Liste des services</a></li>
+      <div class="btn-group">
+          <a class="btn btn-primary dropdown-toggle" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Services
+          </a>
+          <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="index.php?page=saisieService">Ajouter un service</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="index.php?page=listeServices">Liste des services</a></li>
+          </ul>
+      </div>
+      <?php } ?>
+    </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <?php if(!$this->data['isLoggedOn']) { ?>
+              Compte <i class="bi bi-person me-1"></i>
+          <?php } else { ?>
+              <?= htmlspecialchars($this->data['user']->GetPrenom() ?? 'Utilisateur') ?>
+          <?php } ?>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <?php if(!$this->data['isLoggedOn']) { ?>
+              <li><a class="dropdown-item" href="index.php?page=connexion">Connexion</a></li>
+              <li><a class="dropdown-item" href="index.php?page=inscription">Inscription</a></li>
+          <?php } else { ?>
+              <li><a class="dropdown-item" href="index.php?page=deconnexion">Déconnexion</a></li>
+          <?php } ?>
         </ul>
-    </div>
-          </div>
-          <div>
-            <?php if(empty($_SESSION['user'])) { ?>
-              <div class="btn-group">
-                <a class="btn btn-primary" href="index.php?page=connexion" role="button">Connexion</a>
-              </div>
-              <div class="btn-group">
-                <a class="btn btn-primary" href="index.php?page=inscription" role="button">Inscription</a>
-              </div>
-            <?php } else { ?>
-              <div class="btn-group">
-                <a class="btn btn-primary" href="index.php?page=deconnexion" role="button">Déconnexion</a>
-              </div>
-            <?php } ?>
-    </div>
+      </div>
   </div>
 </header>
 <body>

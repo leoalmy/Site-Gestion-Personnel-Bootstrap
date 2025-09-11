@@ -1,23 +1,19 @@
 <?php
-require_once "controleurs/C_menu.php";
+require_once "controleurs/C_base.php";
 require_once "modeles/M_service.php";
 
-class C_modifierService
+class C_modifierService extends C_base
 {
-    private $data = array();
-    private $controleurMenu;
     private $modeleService;
 
     public function __construct()
     {
-        $this->data = array();
-        $this->controleurMenu = new C_menu();
+        parent::__construct();
         $this->modeleService  = new M_service();
     }
 
     public function action_afficher()
     {
-        $this->controleurMenu->FillData($this->data);
         require_once "vues/partiels/v_entete.php";
 
         if (isset($_GET['code'])) {
@@ -62,8 +58,6 @@ class C_modifierService
             $this->data['leMessage']   = "Tous les champs sont requis.";
         }
 
-        // Re-afficher le formulaire avec le message d'erreur
-        $this->controleurMenu->FillData($this->data);
         $this->data['leService'] = $this->modeleService->GetService($code);
         require_once "vues/partiels/v_entete.php";
         require_once "vues/partiels/v_message.php";

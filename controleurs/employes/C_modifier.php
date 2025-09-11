@@ -1,25 +1,22 @@
 <?php
-    require_once "controleurs/C_menu.php";
+    require_once "controleurs/C_base.php";
     require_once "modeles/M_employe.php";
     require_once "modeles/M_service.php";
 
-    class C_modifierEmploye
+    class C_modifierEmploye extends C_base
     {
-        private $data = array();
         private $modeleService;
         private $modeleEmploye;
 
         public function __construct()
             {
-                $this->data = array();
-                $this->controleurMenu = new C_menu();
+                parent::__construct();
                 $this->modeleService = new M_service();
                 $this->modeleEmploye = new M_employe();
             }
 
         public function action_afficher()
             {
-                $this->controleurMenu->FillData($this->data);
                 require_once "vues/partiels/v_entete.php";
 
                 if (isset($_GET['matricule'])) 
@@ -69,8 +66,6 @@
                 $this->data['leMessage'] = "Tous les champs sont requis.";
             }
 
-            // Show the form again with the error
-            $this->controleurMenu->FillData($this->data);
             $this->data['unEmploye'] = $this->modeleEmploye->GetEmploye($matricule);
             $this->data['lesServices'] = $this->modeleService->GetListe();
             require_once "vues/v_entete.php";
