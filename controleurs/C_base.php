@@ -11,6 +11,7 @@
             // Always initialize session data
             $this->data['isLoggedOn'] = $this->isLoggedOn();
             $this->data['user'] = $this->getCurrentUser();
+            $this->data['userRole'] = $this->getCurrentUserRole();
 
             // Always initialize menu
             $this->controleurMenu = new C_menu();
@@ -23,6 +24,15 @@
 
         protected function getCurrentUser() {
             return $_SESSION['user'] ?? null;
+        }
+
+        protected function getCurrentUserRole() {
+            if(isset($_SESSION['user'])) {
+                return $_SESSION['user']->GetRole() ?? "membre";
+            }
+            else {
+                return "Aucun rôle";
+            }
         }
     }
 ?>

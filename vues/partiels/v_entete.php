@@ -19,8 +19,11 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="public/css/custom.css" type="text/css" />
-    <script src="public/js/main.js"></script>
+    <link rel="stylesheet" 
+      href="public/css/custom.css?v=<?= filemtime('public/css/custom.css') ?>" 
+      type="text/css"/>
+
+    <script src="public/js/main.js?v=<?= filemtime('public/js/main.js') ?>"></script>
 
 </head>
 <header class="bg-dark text-light py-3 shadow">
@@ -31,15 +34,16 @@
     <div>
       <a class="btn btn-primary" href="index.php?page=accueil" role="button">Accueil</a>
 
-    <?php if($this->data['isLoggedOn']) { ?>
     <div class="btn-group">
         <a class="btn btn-primary dropdown-toggle" role="button"
            data-bs-toggle="dropdown" aria-expanded="false">
            Employés
         </a>
         <ul class="dropdown-menu">
+            <?php if($this->data['isLoggedOn']) { ?>
             <li><a class="dropdown-item" href="index.php?page=saisieEmploye">Ajouter un employé</a></li>
             <li><hr class="dropdown-divider"></li>
+            <?php } ?>
             <?php
             foreach ($this->data["lesServices"] as $unService) {
                 echo '<li><a class="dropdown-item" href="index.php?service='
@@ -55,18 +59,22 @@
             </a></li>
         </ul>
     </div>   
-      <div class="btn-group">
-          <a class="btn btn-primary dropdown-toggle" role="button"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            Services
-          </a>
-          <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="index.php?page=saisieService">Ajouter un service</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="index.php?page=listeServices">Liste des services</a></li>
+    <div class="btn-group">
+        <a class="btn btn-primary dropdown-toggle" role="button"
+          data-bs-toggle="dropdown" aria-expanded="false">            Services
+        </a>
+        <ul class="dropdown-menu">
+          <?php if($this->data['isLoggedOn']) { ?>
+            <li><a class="dropdown-item" href="index.php?page=saisieService">Ajouter un service</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <?php } ?>
+            <li><a class="dropdown-item" href="index.php?page=listeServices">Liste des services</a></li>
           </ul>
-      </div>
-      <?php } ?>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-primary" role="button"> Comptes </a>
+    </div>
+
     </div>
       <div class="btn-group">
         <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

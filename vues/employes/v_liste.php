@@ -69,7 +69,9 @@
                         <?php endif; ?>
                     </a>
                 </th>
-                <th>Actions</th>
+                <?php if($this->data['isLoggedOn']) { ?>
+                    <th>Actions</th>
+                <?php } ?>
             </tr>
         </thead>
         <tbody>
@@ -107,26 +109,30 @@
                     echo htmlspecialchars($unEmploye->GetServiceName());
                     echo '</a> (' . htmlspecialchars($unEmploye->GetService()) . ')';
                     echo '</td>';
-                    echo '<td>';
-                    echo "<a href=\"index.php?page=modifierEmploye&matricule=" . htmlspecialchars($unEmploye->GetMatricule()) . "\" 
-                            class=\"btn btn-info btn-sm me-2\" 
-                            data-bs-title=\"Modifier cet employé\">
-                            <i class=\"bi bi-pencil\"></i></a>";
-                    echo "<a href=\"#\" 
-                            class=\"btn btn-danger btn-sm\" 
-                            data-bs-toggle=\"modal\" 
-                            data-bs-target=\"#deleteEmployeeModal\" 
-                            data-href=\"index.php?page=supprimerEmploye&matricule=" . $unEmploye->GetMatricule() . "\" 
-                            data-bs-title=\"Supprimer cet employé\">
-                            <i class=\"bi bi-trash\"></i></a>";
-                    echo '</td>';
+                    if($this->data['isLoggedOn']) {
+                        echo '<td>';
+                        echo "<a href=\"index.php?page=modifierEmploye&matricule=" . htmlspecialchars($unEmploye->GetMatricule()) . "\" 
+                                class=\"btn btn-info btn-sm me-2\" 
+                                data-bs-title=\"Modifier cet employé\">
+                                <i class=\"bi bi-pencil\"></i></a>";
+                        echo "<a href=\"#\" 
+                                class=\"btn btn-danger btn-sm\" 
+                                data-bs-toggle=\"modal\" 
+                                data-bs-target=\"#deleteEmployeeModal\" 
+                                data-href=\"index.php?page=supprimerEmploye&matricule=" . $unEmploye->GetMatricule() . "\" 
+                                data-bs-title=\"Supprimer cet employé\">
+                                <i class=\"bi bi-trash\"></i></a>";
+                        echo '</td>';
+                    }
                     echo '</tr>';
                 }
             ?>
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="5" id="totalCount">Total: <?php echo count($this->data['lesEmployes']); ?> employés</td>
+                <td colspan="<?= $this->data['isLoggedOn'] ? 5 : 4 ?>" id="totalCount">
+                Total: <?= count($this->data['lesEmployes']); ?> employés
+                </td>
             </tr>
         </tfoot>
     </table>

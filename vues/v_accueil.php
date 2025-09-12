@@ -11,6 +11,7 @@
     <div class="container my-4 d-flex justify-content-center">
         <div class="card text-center shadow" style="max-width: 600px;">
             <img src="<?= $this->data['image_accueil'] ?>" class="card-img-top img-fluid" alt="Image d'accueil alternative">
+            <hr class="my-0">
             <div class="card-body">
                 <p class="fs-4 fw-semibold mb-0">Pour toute question ou souci, nos étudiants du SIO sont là pour vous aider ! </p>
             </div>

@@ -15,7 +15,9 @@
                 <th>Code</th>
                 <th>Désignation</th>
                 <th>Nombre d'employés</th>
-                <th>Actions</th>
+                <?php if($this->data['isLoggedOn']) { ?>
+                    <th>Actions</th>
+                <?php } ?>
             </tr>
         </thead>
         <tbody>
@@ -24,23 +26,28 @@
                     <td><?php echo htmlspecialchars($service->GetCode()); ?></td>
                     <td><?php echo htmlspecialchars($service->GetDesignation()); ?></td>
                     <td><?php echo htmlspecialchars($service->GetNbEmployes()); ?></td>
-                    <td>
-                        <a href="index.php?page=modifierService&code=<?php echo urlencode($service->GetCode()); ?>" class="btn btn-primary btn-sm" data-bs-title="Modifier ce service"><i class="bi bi-pencil"></i></a>
-                        <a href="#" 
-                            class="btn btn-danger btn-sm delete-btn" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#confirmModal" 
-                            data-href="index.php?page=supprimerService&code=<?php echo urlencode($service->GetCode()); ?>" 
-                            data-bs-title="Supprimer ce service" 
-                            data-body="Voulez-vous vraiment supprimer le service <?php echo htmlspecialchars($service->GetDesignation()); ?> ?">
-                            <i class="bi bi-trash"></i>
-                        </a>
+                    <?php if($this->data['isLoggedOn']) { ?>
+                        <td>
+                            <a href="index.php?page=modifierService&code=<?php echo urlencode($service->GetCode()); ?>" class="btn btn-primary btn-sm" data-bs-title="Modifier ce service"><i class="bi bi-pencil"></i></a>
+                            <a href="#" 
+                                class="btn btn-danger btn-sm delete-btn" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#confirmModal" 
+                                data-href="index.php?page=supprimerService&code=<?php echo urlencode($service->GetCode()); ?>" 
+                                data-bs-title="Supprimer ce service" 
+                                data-body="Voulez-vous vraiment supprimer le service <?php echo htmlspecialchars($service->GetDesignation()); ?> ?">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    <?php } ?>
                 </tr>
             <?php endforeach; ?>
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="4" id="totalCount">Total: <?php echo count($this->data['lesServices']); ?> services</td>
+                <td colspan="<?= $this->data['isLoggedOn'] ? 4 : 3 ?>" id="totalCount">
+                Total: <?= count($this->data['lesServices']); ?> services
+                </td>
             </tr>
         </tfoot>
     </table>
