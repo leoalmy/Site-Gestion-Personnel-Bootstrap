@@ -4,10 +4,11 @@
 
     class M_employe extends M_generique
     {
-        public function GetListe($orderBy = "emp_matricule", $direction = "ASC")
+        public function GetListe($orderBy = "emp_matricule", $direction = "ASC", $offset = 0, $rowsPerPage = 10)
         {
             $resultat = array();
             $this->connexion();
+            $cnx = $this->GetCnx();
 
             $allowedColumns = ["emp_matricule", "emp_nom", "emp_prenom", "emp_service"];
             if (!in_array($orderBy, $allowedColumns)) {
@@ -16,13 +17,19 @@
 
             $direction = strtoupper($direction) === "DESC" ? "DESC" : "ASC";
 
+            // Ensure integers to prevent SQL injection
+            $offset = (int)$offset;
+            $rowsPerPage = (int)$rowsPerPage;
+
             $req = "
                 SELECT e.emp_matricule, e.emp_nom, e.emp_prenom, e.emp_service, s.sce_designation AS service_name
                 FROM employe e
                 LEFT JOIN service s ON e.emp_service = s.sce_code
                 ORDER BY $orderBy $direction
+                LIMIT $offset, $rowsPerPage
             ";
-            $res = mysqli_query($this->GetCnx(), $req);
+
+            $res = mysqli_query($cnx, $req);
 
             while ($ligne = mysqli_fetch_assoc($res)) {
                 $employe = new Employe(
@@ -39,7 +46,7 @@
             return $resultat;
         }
 
-        public function GetListeService($code, $orderBy = 'emp_matricule', $direction = 'ASC')
+        public function GetListeService($code, $orderBy = 'emp_matricule', $direction = 'ASC', $offset = 0, $rowsPerPage = 10)
         {
             $resultat = array();
             $this->connexion();
@@ -54,13 +61,18 @@
 
             $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
 
+            $offset = (int)$offset;
+            $rowsPerPage = (int)$rowsPerPage;
+
             $req = "
                 SELECT e.emp_matricule, e.emp_nom, e.emp_prenom, e.emp_service, s.sce_designation AS service_name
                 FROM employe e
                 LEFT JOIN service s ON e.emp_service = s.sce_code
                 WHERE e.emp_service = '$code'
                 ORDER BY $orderBy $direction
+                LIMIT $offset, $rowsPerPage
             ";
+
             $res = mysqli_query($cnx, $req);
 
             while ($ligne = mysqli_fetch_assoc($res)) {
@@ -189,5 +201,40 @@
 
             return $ok;
         }
+
+        // Count all employees
+        public function CountEmployes()
+        {
+            $this->connexion();
+            $cnx = $this->GetCnx();
+
+            $res = mysqli_query($cnx, "SELECT COUNT(*) AS total FROM employe");
+            $count = 0;
+            if ($ligne = mysqli_fetch_assoc($res)) {
+                $count = (int)$ligne['total'];
+            }
+
+            $this->deconnexion();
+            return $count;
+        }
+
+        // Count employees for a specific service
+        public function CountEmployesService($codeService)
+        {
+            $this->connexion();
+            $cnx = $this->GetCnx();
+
+            $codeService = mysqli_real_escape_string($cnx, $codeService);
+            $res = mysqli_query($cnx, "SELECT COUNT(*) AS total FROM employe WHERE emp_service = '$codeService'");
+            
+            $count = 0;
+            if ($ligne = mysqli_fetch_assoc($res)) {
+                $count = (int)$ligne['total'];
+            }
+
+            $this->deconnexion();
+            return $count;
+        }
+
     } 
 ?>

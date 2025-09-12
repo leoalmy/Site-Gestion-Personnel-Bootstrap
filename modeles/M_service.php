@@ -4,16 +4,30 @@ require_once "metiers/Service.php";
 
 class M_service extends M_generique
 {
-    public function GetListe()
+    public function GetListe($offset = 0, $rowsPerPage = 10, $orderBy = 'sce_code', $direction = 'ASC')
     {
         $resultat = [];
         $this->connexion();
         $cnx = $this->GetCnx();
 
+        $offset = (int)$offset;
+        $rowsPerPage = (int)$rowsPerPage;
+
+        // Whitelist columns to prevent SQL injection
+        $allowedColumns = ['sce_code', 'sce_designation', 'nb_employes'];
+        if (!in_array($orderBy, $allowedColumns)) {
+            $orderBy = 'sce_code';
+        }
+
+        $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
+
         $req = "SELECT s.sce_code, s.sce_designation, COUNT(e.emp_matricule) AS nb_employes
                 FROM service s
                 LEFT JOIN employe e ON s.sce_code = e.emp_service
-                GROUP BY s.sce_code, s.sce_designation";
+                GROUP BY s.sce_code, s.sce_designation
+                ORDER BY $orderBy $direction
+                LIMIT $offset, $rowsPerPage";
+
         $res = mysqli_query($cnx, $req);
 
         while ($ligne = mysqli_fetch_assoc($res)) {
@@ -117,6 +131,21 @@ class M_service extends M_generique
         } else {
             return 's01';
         }
+    }
+
+    public function CountServices()
+    {
+        $this->connexion();
+        $cnx = $this->GetCnx();
+
+        $res = mysqli_query($cnx, "SELECT COUNT(*) AS total FROM service");
+        $count = 0;
+        if ($ligne = mysqli_fetch_assoc($res)) {
+            $count = (int)$ligne['total'];
+        }
+
+        $this->deconnexion();
+        return $count;
     }
 }
 ?>

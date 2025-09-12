@@ -157,6 +157,11 @@
             exit();
         }
 
+        if ($page == "connexion" && isset($_SESSION['user'] )|| $page == "inscription" && isset($_SESSION['user'])) {
+            header("Location: index.php?page=accueil");
+            exit();
+        }
+
         require_once $route['file'];
         $controller = new $route['class'];
         call_user_func_array([$controller, $route['method']], $route['params']);

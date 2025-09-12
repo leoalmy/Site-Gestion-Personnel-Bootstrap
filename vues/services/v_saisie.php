@@ -5,7 +5,7 @@
         <div class="mb-3">
             <label for="code" class="form-label">Code :</label>
             <input type="text" class="form-control" id="code" name="code"
-                value="<?= $this->data['nextCode'] ?>" readonly>
+                value="<?= $this->data['nextCode'] ?>" disabled>
         </div>
 
         <div class="mb-3">

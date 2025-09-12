@@ -1,138 +1,104 @@
 <div class="container my-4">
-    <!--- Titre de la page --->
-    <h2 class="mb-4">Liste des Services</h2>
+    <!-- Page title -->
+    <h2 class="mb-4">Services List</h2>
 
     <!-- 🔍 Search bar -->
     <div class="d-flex mb-3">
-        <input type="text" id="searchInput" class="form-control me-2" placeholder="Rechercher un service...">
+        <input type="text" id="searchInput" class="form-control me-2" placeholder="Search a service...">
         <button id="clearSearch" class="btn btn-secondary" style="display: none;">✕</button>
     </div>
 
-    <!--- Tableau des services --->
+    <?php
+    // Base query string for links (without pageNum so we can override it)
+    $queryBase = "page=listeServices";
+    if (!empty($orderBy)) {
+        $queryBase .= "&orderBy=" . urlencode($orderBy) . "&direction=" . urlencode($direction);
+    }
+    ?>
+
+    <!-- Services table -->
     <table class="table table-striped table-bordered" id="serviceTable">
         <thead class="table-dark">
             <tr>
-                <th>Code</th>
-                <th>Désignation</th>
-                <th>Nombre d'employés</th>
-                <?php if($this->data['isLoggedOn']) { ?>
-                    <th>Actions</th>
-                <?php } ?>
+                <?php
+                $columns = [
+                    'sce_code' => 'Code',
+                    'sce_designation' => 'Designation',
+                    'nb_employes' => 'Number of Employees'
+                ];
+                ?>
+                <?php foreach ($columns as $colKey => $colLabel): ?>
+                    <th scope="col">
+                        <a href="index.php?page=listeServices&orderBy=<?= $colKey ?>&direction=<?= ($orderBy === $colKey && $direction === 'ASC') ? 'DESC' : 'ASC' ?>&pageNum=<?= $this->data['pageNum'] ?>"
+                        class="text-light">
+                            <?= $colLabel ?>
+                            <?php if ($orderBy === $colKey): ?>
+                                <i class="bi bi-caret-<?= ($direction === 'ASC') ? 'down' : 'up' ?>-fill"></i>
+                            <?php endif; ?>
+                        </a>
+                    </th>
+                <?php endforeach; ?>
+                <?php if ($this->data['isLoggedOn']): ?>
+                    <th scope="col">Actions</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($this->data['lesServices'] as $service): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($service->GetCode()); ?></td>
-                    <td><?php echo htmlspecialchars($service->GetDesignation()); ?></td>
-                    <td><?php echo htmlspecialchars($service->GetNbEmployes()); ?></td>
-                    <?php if($this->data['isLoggedOn']) { ?>
+                    <td><?= htmlspecialchars($service->GetCode()); ?></td>
+                    <td><?= htmlspecialchars($service->GetDesignation()); ?></td>
+                    <td><?= htmlspecialchars($service->GetNbEmployes()); ?></td>
+                    <?php if ($this->data['isLoggedOn']): ?>
                         <td>
-                            <a href="index.php?page=modifierService&code=<?php echo urlencode($service->GetCode()); ?>" class="btn btn-primary btn-sm" data-bs-title="Modifier ce service"><i class="bi bi-pencil"></i></a>
+                            <a href="index.php?page=modifierService&code=<?= urlencode($service->GetCode()); ?>" 
+                               class="btn btn-primary btn-sm" data-bs-title="Edit this service">
+                               <i class="bi bi-pencil"></i>
+                            </a>
                             <a href="#" 
-                                class="btn btn-danger btn-sm delete-btn" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#confirmModal" 
-                                data-href="index.php?page=supprimerService&code=<?php echo urlencode($service->GetCode()); ?>" 
-                                data-bs-title="Supprimer ce service" 
-                                data-body="Voulez-vous vraiment supprimer le service <?php echo htmlspecialchars($service->GetDesignation()); ?> ?">
-                                <i class="bi bi-trash"></i>
+                               class="btn btn-danger btn-sm delete-btn" 
+                               data-bs-toggle="modal" 
+                               data-bs-target="#confirmModal" 
+                               data-href="index.php?page=supprimerService&code=<?= urlencode($service->GetCode()); ?>" 
+                               data-bs-title="Delete this service" 
+                               data-body="Are you sure you want to delete the service <?= htmlspecialchars($service->GetDesignation()); ?>?">
+                               <i class="bi bi-trash"></i>
                             </a>
                         </td>
-                    <?php } ?>
+                    <?php endif; ?>
                 </tr>
             <?php endforeach; ?>
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="<?= $this->data['isLoggedOn'] ? 4 : 3 ?>" id="totalCount">
-                Total: <?= count($this->data['lesServices']); ?> services
+                    Total: <?= count($this->data['lesServices']); ?> services
                 </td>
             </tr>
         </tfoot>
     </table>
+
+    <!-- Pagination -->
+    <?php if ($this->data['totalPages'] > 1): ?>
+    <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+            <!-- Previous button -->
+            <li class="page-item <?= $this->data['pageNum'] == 1 ? 'disabled' : '' ?>">
+                <a class="page-link" href="index.php?<?= $queryBase ?>&pageNum=<?= $this->data['pageNum']-1 ?>">Previous</a>
+            </li>
+
+            <!-- Page numbers -->
+            <?php for ($i = 1; $i <= $this->data['totalPages']; $i++): ?>
+                <li class="page-item <?= $i == $this->data['pageNum'] ? 'active' : '' ?>">
+                    <a class="page-link" href="index.php?<?= $queryBase ?>&pageNum=<?= $i ?>"><?= $i ?></a>
+                </li>
+            <?php endfor; ?>
+
+            <!-- Next button -->
+            <li class="page-item <?= $this->data['pageNum'] == $this->data['totalPages'] ? 'disabled' : '' ?>">
+                <a class="page-link" href="index.php?<?= $queryBase ?>&pageNum=<?= $this->data['pageNum']+1 ?>">Next</a>
+            </li>
+        </ul>
+    </nav>
+    <?php endif; ?>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const confirmModal = document.getElementById('confirmModal');
-        const confirmBtn   = document.getElementById('confirmBtn');
-
-        // Handle opening modal for each delete button
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const href = btn.getAttribute('data-href');
-                const title = btn.getAttribute('data-bs-title') || 'Confirmer';
-                const body = btn.getAttribute('data-body') || 'Voulez-vous continuer ?';
-
-                // Update modal content dynamically
-                confirmModal.querySelector('.modal-title').textContent = title;
-                confirmModal.querySelector('.modal-body').textContent  = body;
-
-                // Update confirm button click
-                confirmBtn.onclick = function () {
-                    window.location.href = href;
-                };
-            });
-        });
-    });
-
-    // Live search functionality
-    document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.getElementById("searchInput");
-        const table = document.getElementById("serviceTable");
-        const rows = table.getElementsByTagName("tr");
-        const totalCell = document.getElementById("totalCount");
-
-        function normalize(str) {
-            return str
-                .normalize("NFD") // split letters and accents
-                .replace(/[\u0300-\u036f]/g, "") // remove accents
-                .toLowerCase();
-        }
-
-        searchInput.addEventListener("keyup", function () {
-            const filter = normalize(searchInput.value);
-            let visibleCount = 0;
-
-            for (let i = 1; i < rows.length - 1; i++) { // skip header/footer
-                const cells = rows[i].getElementsByTagName("td");
-                if (cells.length > 0) {
-                    const matricule = normalize(cells[0].textContent);
-                    const designation = normalize(cells[1].textContent);
-
-                    if (
-                        matricule.includes(filter) ||
-                        designation.includes(filter)
-                    ) {
-                        rows[i].style.display = "";
-                        visibleCount++;
-                    } else {
-                        rows[i].style.display = "none";
-                    }
-                }
-            }
-
-            if (visibleCount <= 1) {
-                totalCell.textContent = "Total: " + visibleCount + " service";
-            } else {
-            totalCell.textContent = "Total: " + visibleCount + " services";
-            }
-
-            document.getElementById("clearSearch").style.display = filter ? 'inline-block' : 'none';
-        });
-
-        // Clear search button functionality
-        document.getElementById("clearSearch").addEventListener("click", function () {
-            document.getElementById("searchInput").value = "";
-            document.getElementById("searchInput").dispatchEvent(new Event('keyup'));
-            this.style.display = 'none';
-        });
-
-        // Initialize Bootstrap tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-title]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-    });
-</script>

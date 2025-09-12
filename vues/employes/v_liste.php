@@ -10,7 +10,6 @@
                 's04' => 'Administration'
             ];
 
-            // Get the current service code if object exists
             $currentService = 'all';
             if (!empty($this->data['leService'])) {
                 $currentService = $this->data['leService']->GetCode();
@@ -22,120 +21,114 @@
         ?>
     </h2>
 
-    <!-- 🔍 Search bar -->
+    <!-- Search bar -->
     <div class="d-flex mb-3">
         <input type="text" id="searchInput" class="form-control me-2" placeholder="Rechercher un employé...">
-        <button id="clearSearch" class="btn btn-secondary" style="display: none;">✕</button>
+        <button id="clearSearch" class="btn btn-secondary d-none">✕</button>
     </div>
-
 
     <!-- Employee table -->
     <table class="table table-striped table-bordered" id="employeTable">
         <thead class="table-dark">
             <tr>
-                <th>
-                    <a href="index.php?page=listeEmployes&service=<?php echo urlencode($currentService); ?>&orderBy=emp_matricule&direction=<?php echo ($orderBy === 'emp_matricule' && $direction === 'ASC') ? 'DESC' : 'ASC'; ?>"
-                    class="text-light">
-                        Matricule
-                        <?php if ($orderBy === 'emp_matricule'): ?>
-                            <i class="bi bi-caret-<?php echo ($direction === 'ASC') ? 'up' : 'down'; ?>-fill"></i>
-                        <?php endif; ?>
-                    </a>
-                </th>
-                <th>
-                    <a href="index.php?page=listeEmployes&service=<?php echo urlencode($currentService); ?>&orderBy=emp_nom&direction=<?php echo ($orderBy === 'emp_nom' && $direction === 'ASC') ? 'DESC' : 'ASC'; ?>"
-                    class="text-light">
-                        Nom
-                        <?php if ($orderBy === 'emp_nom'): ?>
-                            <i class="bi bi-caret-<?php echo ($direction === 'ASC') ? 'up' : 'down'; ?>-fill"></i>
-                        <?php endif; ?>
-                    </a>
-                </th>
-                <th>
-                    <a href="index.php?page=listeEmployes&service=<?php echo urlencode($currentService); ?>&orderBy=emp_prenom&direction=<?php echo ($orderBy === 'emp_prenom' && $direction === 'ASC') ? 'DESC' : 'ASC'; ?>"
-                    class="text-light">
-                        Prénom
-                        <?php if ($orderBy === 'emp_prenom'): ?>
-                            <i class="bi bi-caret-<?php echo ($direction === 'ASC') ? 'up' : 'down'; ?>-fill"></i>
-                        <?php endif; ?>
-                    </a>
-                </th>
-                <th>
-                    <a href="index.php?page=listeEmployes&service=<?php echo urlencode($currentService); ?>&orderBy=emp_service&direction=<?php echo ($orderBy === 'emp_service' && $direction === 'ASC') ? 'DESC' : 'ASC'; ?>"
-                    class="text-light">
-                        Service
-                        <?php if ($orderBy === 'emp_service'): ?>
-                            <i class="bi bi-caret-<?php echo ($direction === 'ASC') ? 'up' : 'down'; ?>-fill"></i>
-                        <?php endif; ?>
-                    </a>
-                </th>
-                <?php if($this->data['isLoggedOn']) { ?>
-                    <th>Actions</th>
-                <?php } ?>
+                <?php
+                    $columns = [
+                        'emp_matricule' => 'Matricule',
+                        'emp_nom' => 'Nom',
+                        'emp_prenom' => 'Prénom',
+                        'emp_service' => 'Service'
+                    ];
+                ?>
+                <?php foreach ($columns as $colKey => $colLabel): ?>
+                    <th scope="col">
+                        <a href="index.php?page=listeEmployes&service=<?= urlencode($currentService) ?>&orderBy=<?= $colKey ?>&direction=<?= ($orderBy === $colKey && $direction === 'ASC') ? 'DESC' : 'ASC'; ?>&page_num=<?= $this->data['currentPage'] ?>"
+                            class="text-light">
+                            <?= $colLabel ?>
+                            <?php if ($orderBy === $colKey): ?>
+                                <i class="bi bi-caret-<?= ($direction === 'ASC') ? 'up' : 'down'; ?>-fill"></i>
+                            <?php endif; ?>
+                        </a>
+                    </th>
+                <?php endforeach; ?>
+                <?php if ($this->data['isLoggedOn']): ?>
+                    <th scope="col">Actions</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody>
-            <?php
-                foreach ($this->data['lesEmployes'] as $unEmploye) 
-                {
-                    // Map service code to Bootstrap color
+            <?php foreach ($this->data['lesEmployes'] as $unEmploye): ?>
+                <?php
+                    // Service button color
                     switch ($unEmploye->GetService()) {
-                        case 's01': // Fabrication
-                            $btnClass = 'btn-primary'; // blue
-                            break;
-                        case 's02': // Emballage
-                            $btnClass = 'btn-warning'; // orange
-                            break;
-                        case 's03': // Commercial
-                            $btnClass = 'btn-success'; // green
-                            break;
-                        case 's04': // Administration
-                            $btnClass = 'btn-danger'; // red
-                            break;
-                        default:
-                            $btnClass = 'btn-dark'; // fallback
-                            break;
+                        case 's01': $btnClass = 'btn-primary'; break;
+                        case 's02': $btnClass = 'btn-warning'; break;
+                        case 's03': $btnClass = 'btn-success'; break;
+                        case 's04': $btnClass = 'btn-danger'; break;
+                        default: $btnClass = 'btn-dark'; break;
                     }
-
-                    echo '<tr>';
-                    echo '<td>' . htmlspecialchars($unEmploye->GetMatricule()) . '</td>';
-                    echo '<td>' . htmlspecialchars($unEmploye->GetNom()) . '</td>';
-                    echo '<td>' . htmlspecialchars($unEmploye->GetPrenom()) . '</td>';
-
-                    // Service button with custom color
-                    echo '<td>';
-                    echo '<a href="index.php?service=' . htmlspecialchars($unEmploye->GetService()) . '&page=listeEmployes" ';
-                    echo 'class="btn btn-sm ' . $btnClass . '">';
-                    echo htmlspecialchars($unEmploye->GetServiceName());
-                    echo '</a> (' . htmlspecialchars($unEmploye->GetService()) . ')';
-                    echo '</td>';
-                    if($this->data['isLoggedOn']) {
-                        echo '<td>';
-                        echo "<a href=\"index.php?page=modifierEmploye&matricule=" . htmlspecialchars($unEmploye->GetMatricule()) . "\" 
-                                class=\"btn btn-info btn-sm me-2\" 
-                                data-bs-title=\"Modifier cet employé\">
-                                <i class=\"bi bi-pencil\"></i></a>";
-                        echo "<a href=\"#\" 
-                                class=\"btn btn-danger btn-sm\" 
-                                data-bs-toggle=\"modal\" 
-                                data-bs-target=\"#deleteEmployeeModal\" 
-                                data-href=\"index.php?page=supprimerEmploye&matricule=" . $unEmploye->GetMatricule() . "\" 
-                                data-bs-title=\"Supprimer cet employé\">
-                                <i class=\"bi bi-trash\"></i></a>";
-                        echo '</td>';
-                    }
-                    echo '</tr>';
-                }
-            ?>
+                ?>
+                <tr>
+                    <td><?= htmlspecialchars($unEmploye->GetMatricule()) ?></td>
+                    <td><?= htmlspecialchars($unEmploye->GetNom()) ?></td>
+                    <td><?= htmlspecialchars($unEmploye->GetPrenom()) ?></td>
+                    <td>
+                        <a href="index.php?page=listeEmployes&service=<?= htmlspecialchars($unEmploye->GetService()) ?>" 
+                           class="btn btn-sm <?= $btnClass ?>">
+                           <?= htmlspecialchars($unEmploye->GetServiceName()) ?>
+                        </a>
+                        (<?= htmlspecialchars($unEmploye->GetService()) ?>)
+                    </td>
+                    <?php if ($this->data['isLoggedOn']): ?>
+                        <td>
+                            <a href="index.php?page=modifierEmploye&matricule=<?= htmlspecialchars($unEmploye->GetMatricule()) ?>" 
+                               class="btn btn-info btn-sm me-2" data-bs-title="Modifier cet employé">
+                               <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="#" 
+                               class="btn btn-danger btn-sm" 
+                               data-bs-toggle="modal" 
+                               data-bs-target="#deleteEmployeeModal" 
+                               data-href="index.php?page=supprimerEmploye&matricule=<?= $unEmploye->GetMatricule() ?>" 
+                               data-bs-title="Supprimer cet employé">
+                               <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="<?= $this->data['isLoggedOn'] ? 5 : 4 ?>" id="totalCount">
-                Total: <?= count($this->data['lesEmployes']); ?> employés
+                    Total: <?= count($this->data['lesEmployes']); ?> employés
                 </td>
             </tr>
         </tfoot>
     </table>
+
+    <!-- Pagination -->
+    <?php if ($this->data['totalPages'] > 1): ?>
+    <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+            <li class="page-item <?= $this->data['currentPage'] == 1 ? 'disabled' : '' ?>">
+                <a class="page-link" href="index.php?page=listeEmployes&service=<?= urlencode($currentService) ?>&orderBy=<?= urlencode($orderBy) ?>&direction=<?= urlencode($direction) ?>
+&page_num=<?= $this->data['currentPage']-1 ?>">Précédent</a>
+            </li>
+
+            <?php for ($i=1; $i<=$this->data['totalPages']; $i++): ?>
+                <li class="page-item <?= $i==$this->data['currentPage']?'active':'' ?>">
+                    <a class="page-link" 
+                       aria-current="<?= $i==$this->data['currentPage']?'page':false ?>"
+                       href="index.php?page=listeEmployes&service=<?= urlencode($currentService) ?>&orderBy=<?= urlencode($orderBy) ?>&direction=<?= urlencode($direction) ?>&page_num=<?= $i ?>"><?= $i ?></a>
+                </li>
+            <?php endfor; ?>
+
+            <li class="page-item <?= $this->data['currentPage']==$this->data['totalPages']?'disabled':'' ?>">
+                <a class="page-link" href="index.php?page=listeEmployes&service=<?= urlencode($currentService) ?>&orderBy=<?= urlencode($orderBy) ?>&direction=<?= urlencode($direction) ?>&page_num=<?= $this->data['currentPage']+1 ?>">Suivant</a>
+            </li>
+        </ul>
+    </nav>
+    <?php endif; ?>
 </div>
 
 <!-- Delete Confirmation Modal -->
@@ -157,79 +150,59 @@
   </div>
 </div>
 
-<!-- JS for live search -->
+<!-- JS for live search and modal -->
 <script>
-    // Live search functionality
-    document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.getElementById("searchInput");
-        const table = document.getElementById("employeTable");
-        const rows = table.getElementsByTagName("tr");
-        const totalCell = document.getElementById("totalCount");
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const clearSearch = document.getElementById("clearSearch");
+    const table = document.getElementById("employeTable");
+    const rows = table.getElementsByTagName("tr");
+    const totalCell = document.getElementById("totalCount");
 
-        function normalize(str) {
-            return str
-                .normalize("NFD") // split letters and accents
-                .replace(/[\u0300-\u036f]/g, "") // remove accents
-                .toLowerCase();
-        }
+    function normalize(str) {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
 
-        searchInput.addEventListener("keyup", function () {
-            const filter = normalize(searchInput.value);
-            let visibleCount = 0;
+    searchInput.addEventListener("keyup", function () {
+        const filter = normalize(this.value);
+        let visibleCount = 0;
 
-            for (let i = 1; i < rows.length - 1; i++) { // skip header/footer
-                const cells = rows[i].getElementsByTagName("td");
-                if (cells.length > 0) {
-                    const matricule = normalize(cells[0].textContent);
-                    const nom = normalize(cells[1].textContent);
-                    const prenom = normalize(cells[2].textContent);
+        for (let i = 1; i < rows.length - 1; i++) {
+            const cells = rows[i].getElementsByTagName("td");
+            if (cells.length > 0) {
+                const matricule = normalize(cells[0].textContent);
+                const nom = normalize(cells[1].textContent);
+                const prenom = normalize(cells[2].textContent);
 
-                    if (
-                        matricule.includes(filter) ||
-                        nom.includes(filter) ||
-                        prenom.includes(filter)
-                    ) {
-                        rows[i].style.display = "";
-                        visibleCount++;
-                    } else {
-                        rows[i].style.display = "none";
-                    }
+                if (matricule.includes(filter) || nom.includes(filter) || prenom.includes(filter)) {
+                    rows[i].style.display = "";
+                    visibleCount++;
+                } else {
+                    rows[i].style.display = "none";
                 }
             }
+        }
 
-            if (visibleCount <= 1) {
-                totalCell.textContent = "Total: " + visibleCount + " employé";
-            } else {
-            totalCell.textContent = "Total: " + visibleCount + " employés";
-            }
-
-            document.getElementById("clearSearch").style.display = filter ? 'inline-block' : 'none';
-        });
-    });
-    
-    // Clear search button functionality
-    document.getElementById("clearSearch").addEventListener("click", function () {
-        document.getElementById("searchInput").value = "";
-        document.getElementById("searchInput").dispatchEvent(new Event('keyup'));
-        this.style.display = 'none';
+        totalCell.textContent = "Total: " + visibleCount + (visibleCount > 1 ? " employés" : " employé");
+        clearSearch.classList.toggle("d-none", !filter);
     });
 
-    // Initialize Bootstrap tooltips
+    clearSearch.addEventListener("click", function () {
+        searchInput.value = "";
+        searchInput.dispatchEvent(new Event('keyup'));
+    });
+
+    // Delete confirmation modal
+    const deleteModal = document.getElementById('deleteEmployeeModal');
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const href = button.getAttribute('data-href');
+        confirmBtn.setAttribute('href', href);
+    });
+
+    // Bootstrap tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-title]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-
-    // JS for delete confirmation modal
-    document.addEventListener("DOMContentLoaded", function() {
-        const deleteModal = document.getElementById('deleteEmployeeModal');
-        const confirmBtn = document.getElementById('confirmDeleteBtn');
-
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget; // Button that triggered the modal
-            const href = button.getAttribute('data-href'); // Get deletion URL
-            confirmBtn.setAttribute('href', href); // Set the modal's "Supprimer" button URL
-        });
-    });
+    tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+});
 </script>

@@ -5,7 +5,7 @@
         <div class="mb-3">
             <label for="matricule" class="form-label">Matricule :</label>
             <input type="text" class="form-control" id="matricule" 
-                value="<?= $this->data['nextMatricule'] ?>" readonly>
+                value="<?= $this->data['nextMatricule'] ?>" disabled>
         </div>
 
         <div class="mb-3">
