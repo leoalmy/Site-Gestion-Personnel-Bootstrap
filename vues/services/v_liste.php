@@ -1,10 +1,10 @@
 <div class="container my-4">
     <!-- Page title -->
-    <h2 class="mb-4">Services List</h2>
+    <h2 class="mb-4">Liste des Services</h2>
 
     <!-- 🔍 Search bar -->
     <div class="d-flex mb-3">
-        <input type="text" id="searchInput" class="form-control me-2" placeholder="Search a service...">
+        <input type="text" id="searchInput" class="form-control me-2" placeholder="Rechercher un service...">
         <button id="clearSearch" class="btn btn-secondary" style="display: none;">✕</button>
     </div>
 
@@ -22,9 +22,9 @@
             <tr>
                 <?php
                 $columns = [
-                    'sce_code' => 'Code',
+                    'sce_code' => 'ID',
                     'sce_designation' => 'Designation',
-                    'nb_employes' => 'Number of Employees'
+                    'nb_employes' => 'Nombre d\'employées'
                 ];
                 ?>
                 <?php foreach ($columns as $colKey => $colLabel): ?>
@@ -102,3 +102,46 @@
     </nav>
     <?php endif; ?>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const clearSearch = document.getElementById("clearSearch");
+    const table = document.getElementById("serviceTable");
+    const rows = table.getElementsByTagName("tr");
+    const totalCell = document.getElementById("totalCount");
+
+    function normalize(str) {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
+    searchInput.addEventListener("keyup", function () {
+        const filter = normalize(this.value);
+        let visibleCount = 0;
+
+        for (let i = 1; i < rows.length - 1; i++) {
+            const cells = rows[i].getElementsByTagName("td");
+            if (cells.length > 0) {
+                const id = normalize(cells[0].textContent);
+                const designation = normalize(cells[1].textContent);
+                const nbEmployes = normalize(cells[2].textContent);
+
+                if (id.includes(filter) || designation.includes(filter) || nbEmployes.includes(filter)) {
+                    rows[i].style.display = "";
+                    visibleCount++;
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+
+        totalCell.textContent = "Total: " + visibleCount + (visibleCount > 1 ? " services" : " service");
+        clearSearch.style.display = filter ? "inline-block" : "none";
+    });
+
+    clearSearch.addEventListener("click", function () {
+        searchInput.value = "";
+        searchInput.dispatchEvent(new Event("keyup"));
+    });
+});
+</script>
