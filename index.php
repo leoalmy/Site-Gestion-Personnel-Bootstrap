@@ -2,173 +2,43 @@
     require_once "metiers/Utilisateurs.php";
     session_start();
 
-    $routes = [
-        "accueil" => [
-            "file" => "controleurs/C_accueil.php",
-            "class" => "C_accueil",
-            "method" => "action_afficher",
-            "params" => [],
-            "protected" => false
-        ],
+    $routes = require __DIR__ . "/config/routes.php";
 
-        "listeEmployes" => [
-            "file" => "controleurs/employes/C_consulter.php",
-            "class" => "C_consulterEmployes",
-            "method" => "action_listeEmployes",
-            "params" => [$_GET['service'] ?? null],
-            "protected" => false
-        ],
+    $page = preg_replace('/[^a-zA-Z0-9_]/', '', $_GET['page'] ?? 'accueil');
+    if (!isset($routes[$page])) {
+        $page = "accueil";
+    }
 
-        "saisieEmploye" => [
-            "file" => "controleurs/employes/C_ajouter.php",
-            "class" => "C_ajouterEmploye",
-            "method" => "action_saisie",
-            "params" => [],
-            "protected" => true
-        ],
+    $route = $routes[$page];
 
-        "ajoutEmploye" => [
-            "file" => "controleurs/employes/C_ajouter.php",
-            "class" => "C_ajouterEmploye",
-            "method" => "action_ajout",
-            "params" => [
-                $_POST['nom'] ?? null,
-                $_POST['prenom'] ?? null,
-                $_POST['service'] ?? null
-            ],
-            "protected" => true
-        ],
+    if (!empty($route['protected']) && empty($_SESSION['user'])) {
+        redirect("connexion");
+    }
 
-        "supprimerEmploye" => [
-            "file" => "controleurs/employes/C_supprimer.php",
-            "class" => "C_supprimerEmploye",
-            "method" => "action_supprimer",
-            "params" => [$_GET['matricule'] ?? null],
-            "protected" => true
-        ],
+    if (in_array($page, ['connexion','inscription']) && !empty($_SESSION['user'])) {
+        redirect("accueil");
+    }
 
-        "modifierEmploye" => [
-            "file" => "controleurs/employes/C_modifier.php",
-            "class" => "C_modifierEmploye",
-            "method" => ($_SERVER['REQUEST_METHOD'] === 'POST') 
-                ? "action_modifier" 
-                : "action_afficher",
-            "params" => [],
-            "protected" => true
-        ],
+    require_once $route['file'];
+    $controller = new $route['class'];
 
-        "listeServices" => [
-            "file" => "controleurs/services/C_consulter.php",
-            "class" => "C_consulterServices",
-            "method" => "action_listeServices",
-            "params" => [],
-            "protected" => false
-        ],
-
-        "saisieService" => [
-            "file" => "controleurs/services/C_ajouter.php",
-            "class" => "C_ajouterService",
-            "method" => "action_saisie",
-            "params" => [],
-            "protected" => true
-        ],
-
-        "ajoutService" => [
-            "file" => "controleurs/services/C_ajouter.php",
-            "class" => "C_ajouterService",
-            "method" => "action_ajout",
-            "params" => [$_POST['designation'] ?? null],
-            "protected" => true
-        ],
-
-        "supprimerService" => [
-            "file" => "controleurs/services/C_supprimer.php",
-            "class" => "C_supprimerService",
-            "method" => "action_supprimer",
-            "params" => [$_GET['code'] ?? null],
-            "protected" => true
-        ],
-
-        "modifierService" => [
-            "file" => "controleurs/services/C_modifier.php",
-            "class" => "C_modifierService",
-            "method" => ($_SERVER['REQUEST_METHOD'] === 'POST') 
-                ? "action_modifier" 
-                : "action_afficher",
-            "params" => [],
-            "protected" => true
-        ],
-
-        "connexion" => [
-            "file" => "controleurs/utilisateurs/C_connexion.php",
-            "class" => "C_connexion",
-            "method" => ($_SERVER['REQUEST_METHOD'] === 'POST') 
-                ? "action_connexion" 
-                : "action_afficher",
-            "params" => [],
-            "protected" => false
-        ],
-
-        "deconnexion" => [
-            "file" => "controleurs/utilisateurs/C_deconnexion.php",
-            "class" => "C_deconnexion",
-            "method" => "action_deconnexion",
-            "params" => [],
-            "protected" => true
-        ],
-
-        "inscription" => [
-            "file" => "controleurs/utilisateurs/C_inscription.php",
-            "class" => "C_inscription",
-            "method" => ($_SERVER['REQUEST_METHOD'] === 'POST') 
-                ? "action_inscrire" 
-                : "action_afficher",
-            "params" => [],
-            "protected" => false
-        ],
-
-        "profil" => [
-            "file" => "controleurs/utilisateurs/C_profil.php",
-            "class" => "C_profil",
-            "method" => "action_afficher",
-            "params" => [],
-            "protected" => true
-        ],
-
-        "consulterComptes" => [
-            "file" => "controleurs/utilisateurs/C_consulter.php",
-            "class" => "C_consulter",
-            "method" => "action_afficher",
-            "params" => [],
-            "protected" => true
-        ]
-    ];
-
-
-    $page = $_GET['page'] ?? 'accueil';
-
-    if (isset($routes[$page])) {
-        $route = $routes[$page];
-
-        // Check if page requires authentication
-        if (!empty($route['protected']) && !isset($_SESSION['user'])) {
-            // Redirect to login if not logged in
-            header("Location: index.php?page=connexion");
-            exit();
-        }
-
-        if ($page == "connexion" && isset($_SESSION['user'] )|| $page == "inscription" && isset($_SESSION['user'])) {
-            header("Location: index.php?page=accueil");
-            exit();
-        }
-
-        require_once $route['file'];
-        $controller = new $route['class'];
-        call_user_func_array([$controller, $route['method']], $route['params']);
+    if (is_array($route['method'])) {
+        $method = strtolower($_SERVER['REQUEST_METHOD']);
+        $method = $route['method'][$method] ?? reset($route['method']);
     } else {
-        // Fallback to accueil
-        require_once "controleurs/C_accueil.php";
-        $controller = new C_accueil();
-        $controller->action_afficher();
+        $method = $route['method'];
+    }
+
+    $params = [];
+    foreach ($route['params'] as $param) {
+        $source = $param['source'] === 'post' ? $_POST : $_GET;
+        $params[] = $source[$param['name']] ?? null;
+    }
+
+    call_user_func_array([$controller, $method], $params);
+
+    function redirect($page) {
+        header("Location: index.php?page=$page");
+        exit();
     }
 ?>

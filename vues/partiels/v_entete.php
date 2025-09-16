@@ -89,6 +89,8 @@
               <li><a class="dropdown-item" href="index.php?page=connexion">Connexion</a></li>
               <li><a class="dropdown-item" href="index.php?page=inscription">Inscription</a></li>
           <?php } else { ?>
+              <li><a class="dropdown-item" href="index.php?page=profil">Profil</a></li>
+              <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="index.php?page=deconnexion">Déconnexion</a></li>
           <?php } ?>
         </ul>

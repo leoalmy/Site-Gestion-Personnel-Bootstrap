@@ -1,240 +1,199 @@
 <?php
-    require_once "M_generique.php";
-    require_once "metiers/Employe.php";
+require_once "M_generique.php";
+require_once "metiers/Employe.php";
 
-    class M_employe extends M_generique
+class M_employe extends M_generique
+{
+    public function GetListe($orderBy = "emp_matricule", $direction = "ASC", $offset = 0, $rowsPerPage = 10)
     {
-        public function GetListe($orderBy = "emp_matricule", $direction = "ASC", $offset = 0, $rowsPerPage = 10)
-        {
-            $resultat = array();
-            $this->connexion();
-            $cnx = $this->GetCnx();
+        $this->connexion();
+        $cnx = $this->GetCnx();
 
-            $allowedColumns = ["emp_matricule", "emp_nom", "emp_prenom", "emp_service"];
-            if (!in_array($orderBy, $allowedColumns)) {
-                $orderBy = "emp_matricule";
-            }
+        $allowedColumns = ["emp_matricule", "emp_nom", "emp_prenom", "emp_service"];
+        if (!in_array($orderBy, $allowedColumns)) {
+            $orderBy = "emp_matricule";
+        }
+        $direction = strtoupper($direction) === "DESC" ? "DESC" : "ASC";
 
-            $direction = strtoupper($direction) === "DESC" ? "DESC" : "ASC";
-
-            // Ensure integers to prevent SQL injection
-            $offset = (int)$offset;
-            $rowsPerPage = (int)$rowsPerPage;
-
-            $req = "
-                SELECT e.emp_matricule, e.emp_nom, e.emp_prenom, e.emp_service, s.sce_designation AS service_name
+        $sql = "SELECT e.emp_matricule, e.emp_nom, e.emp_prenom, e.emp_service, 
+                       s.sce_designation AS service_name
                 FROM employe e
                 LEFT JOIN service s ON e.emp_service = s.sce_code
                 ORDER BY $orderBy $direction
-                LIMIT $offset, $rowsPerPage
-            ";
+                LIMIT :offset, :rows";
 
-            $res = mysqli_query($cnx, $req);
+        $stmt = $cnx->prepare($sql);
+        $stmt->bindValue(':offset', (int)$offset, \PDO::PARAM_INT);
+        $stmt->bindValue(':rows', (int)$rowsPerPage, \PDO::PARAM_INT);
+        $stmt->execute();
 
-            while ($ligne = mysqli_fetch_assoc($res)) {
-                $employe = new Employe(
-                    $ligne["emp_matricule"],
-                    $ligne["emp_nom"],
-                    $ligne["emp_prenom"],
-                    $ligne["emp_service"],
-                    $ligne["service_name"]
-                );
-                $resultat[] = $employe;
-            }
-
-            $this->deconnexion();
-            return $resultat;
+        $resultat = [];
+        while ($ligne = $stmt->fetch()) {
+            $resultat[] = new Employe(
+                $ligne["emp_matricule"],
+                $ligne["emp_nom"],
+                $ligne["emp_prenom"],
+                $ligne["emp_service"],
+                $ligne["service_name"]
+            );
         }
 
-        public function GetListeService($code, $orderBy = 'emp_matricule', $direction = 'ASC', $offset = 0, $rowsPerPage = 10)
-        {
-            $resultat = array();
-            $this->connexion();
-            $cnx = $this->GetCnx();
+        $this->deconnexion();
+        return $resultat;
+    }
 
-            $code = mysqli_real_escape_string($cnx, $code);
+    public function GetListeService($code, $orderBy = 'emp_matricule', $direction = 'ASC', $offset = 0, $rowsPerPage = 10)
+    {
+        $this->connexion();
+        $cnx = $this->GetCnx();
 
-            $allowedColumns = ['emp_matricule', 'emp_nom', 'emp_prenom', 'emp_service'];
-            if (!in_array($orderBy, $allowedColumns)) {
-                $orderBy = 'emp_matricule';
-            }
+        $allowedColumns = ["emp_matricule", "emp_nom", "emp_prenom", "emp_service"];
+        if (!in_array($orderBy, $allowedColumns)) {
+            $orderBy = "emp_matricule";
+        }
+        $direction = strtoupper($direction) === "DESC" ? "DESC" : "ASC";
 
-            $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
-
-            $offset = (int)$offset;
-            $rowsPerPage = (int)$rowsPerPage;
-
-            $req = "
-                SELECT e.emp_matricule, e.emp_nom, e.emp_prenom, e.emp_service, s.sce_designation AS service_name
+        $sql = "SELECT e.emp_matricule, e.emp_nom, e.emp_prenom, e.emp_service, 
+                       s.sce_designation AS service_name
                 FROM employe e
                 LEFT JOIN service s ON e.emp_service = s.sce_code
-                WHERE e.emp_service = '$code'
+                WHERE e.emp_service = :code
                 ORDER BY $orderBy $direction
-                LIMIT $offset, $rowsPerPage
-            ";
+                LIMIT :offset, :rows";
 
-            $res = mysqli_query($cnx, $req);
+        $stmt = $cnx->prepare($sql);
+        $stmt->bindValue(':code', $code);
+        $stmt->bindValue(':offset', (int)$offset, \PDO::PARAM_INT);
+        $stmt->bindValue(':rows', (int)$rowsPerPage, \PDO::PARAM_INT);
+        $stmt->execute();
 
-            while ($ligne = mysqli_fetch_assoc($res)) {
-                $employe = new Employe(
-                    $ligne["emp_matricule"],
-                    $ligne["emp_nom"],
-                    $ligne["emp_prenom"],
-                    $ligne["emp_service"],
-                    $ligne["service_name"]
-                );
-                $resultat[] = $employe;
-            }
-
-            $this->deconnexion();
-            return $resultat;
+        $resultat = [];
+        while ($ligne = $stmt->fetch()) {
+            $resultat[] = new Employe(
+                $ligne["emp_matricule"],
+                $ligne["emp_nom"],
+                $ligne["emp_prenom"],
+                $ligne["emp_service"],
+                $ligne["service_name"]
+            );
         }
 
-        public function GetEmploye($matricule)
-        {
-            $this->connexion();
-            $cnx = $this->GetCnx();
+        $this->deconnexion();
+        return $resultat;
+    }
 
-            $stmt = mysqli_prepare($cnx, "SELECT e.*, s.sce_designation AS service_name
-                                          FROM employe e
-                                          LEFT JOIN service s ON e.emp_service = s.sce_code
-                                          WHERE e.emp_matricule = ?
-                                          ");
-            mysqli_stmt_bind_param($stmt, "s", $matricule);
-            mysqli_stmt_execute($stmt);
-            $res = mysqli_stmt_get_result($stmt);
+    public function GetEmploye($matricule)
+    {
+        $this->connexion();
+        $cnx = $this->GetCnx();
 
-            $resultat = null;
-            if ($ligne = mysqli_fetch_assoc($res)) {
-                $resultat = new Employe(
-                    $ligne["emp_matricule"],
-                    $ligne["emp_nom"],
-                    $ligne["emp_prenom"],
-                    $ligne["emp_service"],
-                    $ligne["service_name"]
-                );
-            }
+        $sql = "SELECT e.*, s.sce_designation AS service_name
+                FROM employe e
+                LEFT JOIN service s ON e.emp_service = s.sce_code
+                WHERE e.emp_matricule = :matricule";
 
-            mysqli_stmt_close($stmt);
-            $this->deconnexion();
-            return $resultat;
-        }
+        $stmt = $cnx->prepare($sql);
+        $stmt->execute(['matricule' => $matricule]);
+        $ligne = $stmt->fetch();
 
-        public function Ajouter($nom, $prenom, $service)
-        {
-            // 1) Generate matricule first (GenererMatricule opens/closes its own cnx)
-            $matricule = $this->GenererMatricule();
+        $this->deconnexion();
+        return $ligne ? new Employe(
+            $ligne["emp_matricule"],
+            $ligne["emp_nom"],
+            $ligne["emp_prenom"],
+            $ligne["emp_service"],
+            $ligne["service_name"]
+        ) : null;
+    }
 
-            // 2) Open a fresh connection for the insert
-            $this->connexion();
-            $cnx = $this->GetCnx();
+    public function Ajouter($nom, $prenom, $service)
+    {
+        $matricule = $this->GenererMatricule();
+        $this->connexion();
+        $cnx = $this->GetCnx();
 
-            // 3) Escape inputs
-            $nom     = mysqli_real_escape_string($cnx, $nom);
-            $prenom  = mysqli_real_escape_string($cnx, $prenom);
-            $service = mysqli_real_escape_string($cnx, $service);
+        $sql = "INSERT INTO employe (emp_matricule, emp_nom, emp_prenom, emp_service)
+                VALUES (:matricule, :nom, :prenom, :service)";
+        $stmt = $cnx->prepare($sql);
+        $ok = $stmt->execute([
+            'matricule' => $matricule,
+            'nom' => $nom,
+            'prenom' => $prenom,
+            'service' => $service
+        ]);
 
-            // 4) Insert
-            $req = "INSERT INTO employe (emp_matricule, emp_nom, emp_prenom, emp_service)
-                    VALUES ('$matricule', '$nom', '$prenom', '$service')";
-            $ok = mysqli_query($cnx, $req);
+        $this->deconnexion();
+        return $ok ? new Employe($matricule, $nom, $prenom, $service) : null;
+    }
 
-            // 5) Return the created object or null
-            $employe = $ok ? new Employe($matricule, $nom, $prenom, $service) : null;
+    public function GenererMatricule()
+    {
+        $this->connexion();
+        $cnx = $this->GetCnx();
 
-            $this->deconnexion();
-            return $employe;
-        }
+        $res = $cnx->query("SELECT MAX(emp_matricule) AS maxMat FROM employe");
+        $ligne = $res->fetch();
 
-        public function GenererMatricule() 
-        {
-            $this->connexion();
+        $this->deconnexion();
 
-            // Get the last matricule
-            $req = "SELECT MAX(emp_matricule) AS maxMat FROM employe";
-            $res = mysqli_query($this->GetCnx(), $req);
-            $ligne = mysqli_fetch_assoc($res);
+        $last = $ligne && $ligne['maxMat'] ? intval(substr($ligne['maxMat'], 1)) : 0;
+        $next = $last + 1;
+        return "e" . str_pad($next, 3, "0", STR_PAD_LEFT);
+    }
 
-            $this->deconnexion();
+    public function Supprimer($matricule)
+    {
+        $this->connexion();
+        $cnx = $this->GetCnx();
 
-            // If no employee yet, start at 1
-            $last = $ligne && $ligne['maxMat'] ? intval(substr($ligne['maxMat'], 1)) : 0;
+        $stmt = $cnx->prepare("DELETE FROM employe WHERE emp_matricule = :matricule");
+        $ok = $stmt->execute(['matricule' => $matricule]);
 
-            // Next matricule
-            $next = $last + 1;
+        $this->deconnexion();
+        return $ok;
+    }
 
-            // Format as e001, e002, etc.
-            return "e" . str_pad($next, 3, "0", STR_PAD_LEFT);
-        }
+    public function Modifier($matricule, $nom, $prenom, $service)
+    {
+        $this->connexion();
+        $cnx = $this->GetCnx();
 
-        public function Supprimer($matricule)
-        {
-            $this->connexion();
+        $stmt = $cnx->prepare("UPDATE employe 
+                               SET emp_nom = :nom, emp_prenom = :prenom, emp_service = :service
+                               WHERE emp_matricule = :matricule");
+        $ok = $stmt->execute([
+            'nom' => $nom,
+            'prenom' => $prenom,
+            'service' => $service,
+            'matricule' => $matricule
+        ]);
 
-            // Sécurisation du matricule
-            $matricule = mysqli_real_escape_string($this->GetCnx(), $matricule);
+        $this->deconnexion();
+        return $ok;
+    }
 
-            // Requête SQL
-            $req = "DELETE FROM employe WHERE emp_matricule = '$matricule'";
-            $ok = mysqli_query($this->GetCnx(), $req);
+    public function CountEmployes()
+    {
+        $this->connexion();
+        $cnx = $this->GetCnx();
 
-            $this->deconnexion();
-            return $ok;
-        }
+        $res = $cnx->query("SELECT COUNT(*) AS total FROM employe");
+        $ligne = $res->fetch();
 
-        public function Modifier($matricule, $nom, $prenom, $service)
-        {
-            $this->connexion();
-            $cnx = $this->GetCnx();
+        $this->deconnexion();
+        return $ligne ? (int)$ligne['total'] : 0;
+    }
 
-            $matricule = mysqli_real_escape_string($cnx, $matricule);
-            $nom       = mysqli_real_escape_string($cnx, $nom);
-            $prenom    = mysqli_real_escape_string($cnx, $prenom);
-            $service   = mysqli_real_escape_string($cnx, $service);
+    public function CountEmployesService($codeService)
+    {
+        $this->connexion();
+        $cnx = $this->GetCnx();
 
-            $req = "UPDATE employe
-                    SET emp_nom = '$nom', emp_prenom = '$prenom', emp_service = '$service'
-                    WHERE emp_matricule = '$matricule'";
+        $stmt = $cnx->prepare("SELECT COUNT(*) AS total FROM employe WHERE emp_service = :service");
+        $stmt->execute(['service' => $codeService]);
+        $ligne = $stmt->fetch();
 
-            $ok = mysqli_query($cnx, $req);
-            $this->deconnexion();
-
-            return $ok;
-        }
-
-        // Count all employees
-        public function CountEmployes()
-        {
-            $this->connexion();
-            $cnx = $this->GetCnx();
-
-            $res = mysqli_query($cnx, "SELECT COUNT(*) AS total FROM employe");
-            $count = 0;
-            if ($ligne = mysqli_fetch_assoc($res)) {
-                $count = (int)$ligne['total'];
-            }
-
-            $this->deconnexion();
-            return $count;
-        }
-
-        // Count employees for a specific service
-        public function CountEmployesService($codeService)
-        {
-            $this->connexion();
-            $cnx = $this->GetCnx();
-
-            $codeService = mysqli_real_escape_string($cnx, $codeService);
-            $res = mysqli_query($cnx, "SELECT COUNT(*) AS total FROM employe WHERE emp_service = '$codeService'");
-            
-            $count = 0;
-            if ($ligne = mysqli_fetch_assoc($res)) {
-                $count = (int)$ligne['total'];
-            }
-
-            $this->deconnexion();
-            return $count;
-        }
-
-    } 
-?>
+        $this->deconnexion();
+        return $ligne ? (int)$ligne['total'] : 0;
+    }
+}
