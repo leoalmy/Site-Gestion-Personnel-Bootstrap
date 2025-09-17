@@ -71,9 +71,11 @@
             <li><a class="dropdown-item" href="index.php?page=listeServices">Liste des services</a></li>
           </ul>
     </div>
+    <?php if($this->data['isLoggedOn'] && $this->getCurrentUserRole() == 'admin') { ?>
     <div class="btn-group">
       <a class="btn btn-primary" role="button"> Comptes </a>
     </div>
+    <?php } ?>
 
     </div>
       <div class="btn-group">

@@ -6,8 +6,8 @@ class M_employe extends M_generique
 {
     public function GetListe($orderBy = "emp_matricule", $direction = "ASC", $offset = 0, $rowsPerPage = 10)
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $allowedColumns = ["emp_matricule", "emp_nom", "emp_prenom", "emp_service"];
         if (!in_array($orderBy, $allowedColumns)) {
@@ -44,8 +44,8 @@ class M_employe extends M_generique
 
     public function GetListeService($code, $orderBy = 'emp_matricule', $direction = 'ASC', $offset = 0, $rowsPerPage = 10)
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $allowedColumns = ["emp_matricule", "emp_nom", "emp_prenom", "emp_service"];
         if (!in_array($orderBy, $allowedColumns)) {
@@ -84,8 +84,8 @@ class M_employe extends M_generique
 
     public function GetEmploye($matricule)
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $sql = "SELECT e.*, s.sce_designation AS service_name
                 FROM employe e
@@ -109,8 +109,8 @@ class M_employe extends M_generique
     public function Ajouter($nom, $prenom, $service)
     {
         $matricule = $this->GenererMatricule();
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $sql = "INSERT INTO employe (emp_matricule, emp_nom, emp_prenom, emp_service)
                 VALUES (:matricule, :nom, :prenom, :service)";
@@ -128,8 +128,8 @@ class M_employe extends M_generique
 
     public function GenererMatricule()
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $res = $cnx->query("SELECT MAX(emp_matricule) AS maxMat FROM employe");
         $ligne = $res->fetch();
@@ -143,8 +143,8 @@ class M_employe extends M_generique
 
     public function Supprimer($matricule)
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $stmt = $cnx->prepare("DELETE FROM employe WHERE emp_matricule = :matricule");
         $ok = $stmt->execute(['matricule' => $matricule]);
@@ -155,8 +155,8 @@ class M_employe extends M_generique
 
     public function Modifier($matricule, $nom, $prenom, $service)
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $stmt = $cnx->prepare("UPDATE employe 
                                SET emp_nom = :nom, emp_prenom = :prenom, emp_service = :service
@@ -174,8 +174,8 @@ class M_employe extends M_generique
 
     public function CountEmployes()
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $res = $cnx->query("SELECT COUNT(*) AS total FROM employe");
         $ligne = $res->fetch();
@@ -186,8 +186,8 @@ class M_employe extends M_generique
 
     public function CountEmployesService($codeService)
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $stmt = $cnx->prepare("SELECT COUNT(*) AS total FROM employe WHERE emp_service = :service");
         $stmt->execute(['service' => $codeService]);

@@ -36,7 +36,7 @@
                     header("Location: index.php?page=connexion");
                 } else {
                     $this->data['typeMessage'] = "error";
-                    $this->data['leMessage'] = "L'email est déjà utilisé.";
+                    $this->data['leMessage'] = "❌ L'email est déjà utilisé.";
                     require_once "vues/partiels/v_entete.php";
                     require_once "vues/partiels/v_message.php";
                     require_once "vues/utilisateurs/v_inscription.php";
@@ -44,7 +44,7 @@
                 }
             } else {
                 $this->data['typeMessage'] = "error";
-                $this->data['leMessage'] = "Les mots de passe ne correspondent pas.";
+                $this->data['leMessage'] = "❌ Les mots de passe ne correspondent pas.";
                 require_once "vues/partiels/v_entete.php";
                 require_once "vues/partiels/v_message.php";
                 require_once "vues/utilisateurs/v_inscription.php";

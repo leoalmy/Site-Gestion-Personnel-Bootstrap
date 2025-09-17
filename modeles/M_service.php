@@ -6,8 +6,8 @@ class M_service extends M_generique
 {
     public function GetListe($offset = 0, $rowsPerPage = 10, $orderBy = 'sce_code', $direction = 'ASC')
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $allowedColumns = ['sce_code', 'sce_designation', 'nb_employes'];
         if (!in_array($orderBy, $allowedColumns)) {
@@ -38,8 +38,8 @@ class M_service extends M_generique
 
     public function GetService($code)
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $stmt = $cnx->prepare("SELECT * FROM service WHERE sce_code = :code");
         $stmt->execute(['code' => $code]);
@@ -52,8 +52,8 @@ class M_service extends M_generique
     public function Ajouter($designation)
     {
         $code = $this->GenererCode();
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $stmt = $cnx->prepare("INSERT INTO service (sce_code, sce_designation) VALUES (:code, :designation)");
         $ok = $stmt->execute(['code' => $code, 'designation' => $designation]);
@@ -64,8 +64,8 @@ class M_service extends M_generique
 
     public function Modifier($code, $designation)
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $stmt = $cnx->prepare("UPDATE service SET sce_designation = :designation WHERE sce_code = :code");
         $ok = $stmt->execute(['designation' => $designation, 'code' => $code]);
@@ -76,8 +76,8 @@ class M_service extends M_generique
 
     public function Supprimer($code)
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $stmt = $cnx->prepare("DELETE FROM service WHERE sce_code = :code");
         $ok = $stmt->execute(['code' => $code]);
@@ -88,8 +88,8 @@ class M_service extends M_generique
 
     public function GenererCode()
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $res = $cnx->query("SELECT MAX(sce_code) AS max_code FROM service");
         $ligne = $res->fetch();
@@ -106,8 +106,8 @@ class M_service extends M_generique
 
     public function CountServices()
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('data');
+        $cnx = $this->getCnx('data');
 
         $res = $cnx->query("SELECT COUNT(*) AS total FROM service");
         $ligne = $res->fetch();

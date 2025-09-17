@@ -7,8 +7,8 @@ class M_utilisateur extends M_generique
     public function AjouterUtilisateur($nom, $prenom, $email, $mdp, $tel)
     {
         try {
-            $this->connexion();
-            $cnx = $this->GetCnx();
+            $this->connexion('auth');
+            $cnx = $this->getCnx('auth');
 
             // Vérifier si l'email existe déjà
             $stmt = $cnx->prepare("SELECT COUNT(*) as cnt FROM user WHERE email = :email");
@@ -51,8 +51,8 @@ class M_utilisateur extends M_generique
 
     public function ConnexionUtilisateur($email, $mdp)
     {
-        $this->connexion();
-        $cnx = $this->GetCnx();
+        $this->connexion('auth');
+        $cnx = $this->getCnx('auth');
 
         $stmt = $cnx->prepare("SELECT nom, prenom, email, mdp, telephone, dateInscription, role 
                                FROM user WHERE email = :email");
