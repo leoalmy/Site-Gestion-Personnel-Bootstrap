@@ -1,1 +1,17 @@
+# Ignore environment files
 .env
+
+# Ignore Composer dependencies
+vendor/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE/project settings
+.vscode/
+.idea/
+
+# Ignore logs and cache
+*.log
+/cache/

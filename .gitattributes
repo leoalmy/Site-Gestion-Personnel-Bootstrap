@@ -1,0 +1,12 @@
+# Exclude development and config files from release archives
+/.gitignore export-ignore
+/.gitattributes export-ignore
+/.github/ export-ignore
+
+# Exclude IDE/project files
+/.vscode/ export-ignore
+/.idea/ export-ignore
+
+# Exclude cache/logs if any
+/cache/ export-ignore
+*.log export-ignore
