@@ -18,6 +18,7 @@ A simple **MVC (Model - View - Controller)** architecture built in PHP, develope
 
 ```
 php-mvc/
+├── BDD/            # Database schema and sample data
 ├── config/         # App configuration
 ├── controleurs/    # Controllers (Accueil, Employés, Services, Utilisateurs...)
 ├── metiers/        # Business classes (Employe, Service, Utilisateur)
@@ -26,6 +27,7 @@ php-mvc/
 ├── public/         # Static resources (CSS, JS, images)
 ├── vendor/         # Composer dependencies
 ├── index.php       # Application entry point
+├── .env.example    # Example environment configuration
 ├── composer.json   # Composer configuration
 └── README.md       # Project documentation
 ```
@@ -60,15 +62,23 @@ php-mvc/
    composer install
    ```
 
-4. **Database setup**
+4. **Configure environment variables**
+
+   * Copy the example file:
+
+     ```bash
+     cp .env.example .env
+     ```
+   * Edit `.env` and update database credentials.
+
+5. **Database setup**
 
    * Start Apache and MySQL in the XAMPP Control Panel
    * Open [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
-   * Create a new database (e.g., `php_mvc`)
-   * Import the SQL schema (if provided)
-   * Update your database credentials in `config/config.php`
+   * Create the required databases
+   * Import the SQL files provided in the **BDD/** folder
 
-5. **Run the project**
+6. **Run the project**
 
    * Open [http://localhost/php-mvc](http://localhost/php-mvc) in your browser
 
