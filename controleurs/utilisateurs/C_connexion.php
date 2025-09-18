@@ -16,9 +16,6 @@ class C_connexion extends C_base
     {
         // Inclure la vue
         require_once "vues/partiels/v_entete.php";
-        if (isset($this->data['typeMessage']) && isset($this->data['leMessage'])) {
-            require_once "vues/partiels/v_message.php";
-        }
         require_once "vues/utilisateurs/v_connexion.php";
         require_once "vues/partiels/v_piedPage.php";
     }

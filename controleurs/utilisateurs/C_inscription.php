@@ -38,7 +38,6 @@
                     $this->data['typeMessage'] = "error";
                     $this->data['leMessage'] = "❌ L'email est déjà utilisé.";
                     require_once "vues/partiels/v_entete.php";
-                    require_once "vues/partiels/v_message.php";
                     require_once "vues/utilisateurs/v_inscription.php";
                     require_once "vues/partiels/v_piedPage.php";
                 }
@@ -46,7 +45,6 @@
                 $this->data['typeMessage'] = "error";
                 $this->data['leMessage'] = "❌ Les mots de passe ne correspondent pas.";
                 require_once "vues/partiels/v_entete.php";
-                require_once "vues/partiels/v_message.php";
                 require_once "vues/utilisateurs/v_inscription.php";
                 require_once "vues/partiels/v_piedPage.php";
             }

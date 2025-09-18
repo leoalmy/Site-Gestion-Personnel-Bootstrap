@@ -1,21 +1,27 @@
 <?php
-    require_once "C_menu.php";
+require_once "controleurs/C_menu.php";
 
-    class C_base
-    {
+class C_base
+{
         protected $data = [];
-        protected $controleurMenu;
 
         public function __construct()
         {
-            // Always initialize session data
-            $this->data['isLoggedOn'] = $this->isLoggedOn();
-            $this->data['user'] = $this->getCurrentUser();
-            $this->data['userRole'] = $this->getCurrentUserRole();
+            // Always set session-related flags
+            $this->data['isLoggedOn'] = !empty($_SESSION['user']);
+            $this->data['user'] = $_SESSION['user'] ?? null;
 
-            // Always initialize menu
-            $this->controleurMenu = new C_menu();
-            $this->controleurMenu->FillData($this->data);
+            try {
+                $menu = new C_menu();
+                $menu->FillData($this->data);
+            } catch (\Exception $e) {
+                // Log the technical details
+                error_log($e->getMessage());
+
+                // Set a friendly error for the modal
+                $this->data['typeMessage'] = "error";
+                $this->data['leMessage'] = "⚠️ Impossible de charger le menu (problème de base de données).";
+            }
         }
 
         protected function isLoggedOn(): bool {

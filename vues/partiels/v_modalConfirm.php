@@ -1,4 +1,4 @@
-<!-- v_modal.php -->
+<!-- v_modalConfirm.php -->
 <div class="modal fade" id="<?= $modalId ?? 'confirmModal' ?>" tabindex="-1" aria-labelledby="<?= $modalId ?? 'confirmModal' ?>Label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

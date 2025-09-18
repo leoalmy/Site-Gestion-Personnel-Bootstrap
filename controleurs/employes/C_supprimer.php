@@ -10,12 +10,12 @@ class C_supprimerEmploye extends C_base
     {
         parent::__construct();
         $this->controleurMenu = new C_menu();
-        $this->modeleEmploye = new M_employe(); // fixed
+        $this->modeleEmploye = new M_employe();
     }
 
     public function action_supprimer($matricule)
     {
-        $ok = $this->modeleEmploye->Supprimer($matricule); // fixed
+        $ok = $this->modeleEmploye->Supprimer($matricule);
         if ($ok) {
             header("Location: index.php?service=all&page=listeEmployes&msg=deleted");
             exit();

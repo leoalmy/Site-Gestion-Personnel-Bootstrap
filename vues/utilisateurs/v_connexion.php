@@ -16,3 +16,20 @@
         </div>
     </form>
 </div>
+
+<?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'error'): ?>
+    <?php 
+        $modalId = "errorModal";
+        $title = "Erreur d'inscription";
+        $body = $this->data['leMessage'];
+        $cancelText = "Fermer";
+        require "vues/partiels/v_modalError.php"; 
+    ?>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
+            errorModal.show();
+        });
+    </script>
+<?php endif; ?>
