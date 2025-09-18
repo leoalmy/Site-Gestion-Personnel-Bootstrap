@@ -44,41 +44,61 @@ php-mvc/
 
 ## 🚀 Installation & Setup (with XAMPP)
 
-1. **Clone or download the repository**
+You have two options to get the code: **clone the repository** or **download the release .zip**.
+
+### Option A: Clone the Repository
+
+1. Open your terminal / Git Bash
+2. Run:
 
    ```bash
-   git clone https://github.com/your-username/php-mvc.git
+   git clone https://github.com/leoalmy/Site-Gestion-Personnel-Bootstrap.git
    ```
-
-2. **Move the project into the XAMPP `htdocs` folder**
+3. Move the project into the XAMPP `htdocs` folder, e.g.:
 
    ```
    C:/xampp/htdocs/php-mvc
    ```
+4. Continue with the common setup steps below.
 
-3. **Install dependencies**
+### Option B: Download Release .zip
+
+1. Go to the [Releases](https://github.com/leoalmy/Site-Gestion-Personnel-Bootstrap/releases) page on GitHub
+2. Download the latest `.zip` release
+3. Extract it into your XAMPP `htdocs` folder, e.g.:
+
+   ```
+   C:/xampp/htdocs/php-mvc
+   ```
+4. Continue with the common setup steps below.
+
+---
+
+### Common Setup Steps
+
+5. **Install dependencies**
 
    ```bash
    composer install
    ```
 
-4. **Configure environment variables**
+6. **Configure environment variables**
 
-   * Copy the example file:
+   * Copy `.env.example` to `.env`
 
      ```bash
      cp .env.example .env
      ```
-   * Edit `.env` and update database credentials.
+   * Update `.env` with your database credentials
 
-5. **Database setup**
+7. **Database setup**
 
    * Start Apache and MySQL in the XAMPP Control Panel
    * Open [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
    * Create the required databases
    * Import the SQL files provided in the **BDD/** folder
 
-6. **Run the project**
+8. **Run the project**
 
    * Open [http://localhost/php-mvc](http://localhost/php-mvc) in your browser
 
