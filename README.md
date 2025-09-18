@@ -18,7 +18,7 @@ A simple **MVC (Model - View - Controller)** architecture built in PHP, develope
 
 ```
 php-mvc/
-├── config/         # Database and app configuration
+├── config/         # App configuration
 ├── controleurs/    # Controllers (Accueil, Employés, Services, Utilisateurs...)
 ├── metiers/        # Business classes (Employe, Service, Utilisateur)
 ├── modeles/        # Data access layer (models)
