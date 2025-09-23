@@ -5,20 +5,20 @@
         <div class="mb-3">
             <label for="matricule" class="form-label">Matricule :</label>
             <input type="text" class="form-control" id="matricule" name="matricule"
-                   value="<?php echo $employe->GetMatricule(); ?>"
+                   value="<?php echo $this->data['unEmploye']->GetMatricule(); ?>"
                    readonly>
         </div>
 
         <div class="mb-3">
             <label for="nom" class="form-label">Nom :</label>
             <input type="text" class="form-control" id="nom" name="nom"
-                   value="<?php echo htmlspecialchars($employe->GetNom()); ?>" required>
+                   value="<?php echo htmlspecialchars($this->data['unEmploye']->GetNom()); ?>" maxlength="50" required>
         </div>
 
         <div class="mb-3">
             <label for="prenom" class="form-label">Prénom :</label>
             <input type="text" class="form-control" id="prenom" name="prenom"
-                   value="<?php echo htmlspecialchars($employe->GetPrenom()); ?>" required>
+                   value="<?php echo htmlspecialchars($this->data['unEmploye']->GetPrenom()); ?>" maxlength="50" required>
         </div>
 
         <div class="mb-3">
@@ -26,7 +26,7 @@
             <select class="form-select" id="service" name="service" required>
                 <?php
                 foreach ($this->data['lesServices'] as $unService) {
-                    $selected = ($unService->GetCode() === $employe->GetService()) ? 'selected' : '';
+                    $selected = ($unService->GetCode() === $this->data['unEmploye']->GetService()) ? 'selected' : '';
                     echo '<option value="' . $unService->GetCode() . '" ' . $selected . '>'
                          . htmlspecialchars($unService->GetDesignation()) . '</option>';
                 }
@@ -67,7 +67,24 @@ document.addEventListener("DOMContentLoaded", function() {
     const editForm = document.getElementById('editForm');
 
     confirmSaveBtn.addEventListener('click', function() {
-        editForm.submit(); // submit the form when confirmed
+        editForm.submit();
     });
 });
 </script>
+
+<?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'error'): ?>
+    <?php 
+        $modalId = "errorModal";
+        $title = "Erreur";
+        $body = $this->data['leMessage'];
+        $cancelText = "Fermer";
+        require "vues/partiels/v_modalError.php";
+    ?>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
+            errorModal.show();
+        });
+    </script>
+<?php endif; ?>

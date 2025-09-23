@@ -206,3 +206,20 @@ document.addEventListener("DOMContentLoaded", function () {
     tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
 });
 </script>
+
+<?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'success'): ?>
+    <?php 
+        $modalId = "successModal";
+        $title = "Succès";
+        $body = $this->data['leMessage'];
+        $cancelText = "Fermer";
+        require "vues/partiels/v_modalSuccess.php";
+    ?>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
+            errorModal.show();
+        });
+    </script>
+<?php endif; ?>

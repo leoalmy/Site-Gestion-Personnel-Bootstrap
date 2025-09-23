@@ -22,12 +22,12 @@
 
         public function action_inscrire()
         {
-            $nom = $_POST['nom'];
-            $prenom = $_POST['prenom'];
-            $email = $_POST['email'];
-            $password = $_POST['mdp'];
-            $confirmpassword = $_POST['mdpConf'];
-            $tel = $_POST['tel'];
+            $nom = htmlspecialchars($_POST['nom']);
+            $prenom = htmlspecialchars($_POST['prenom']);
+            $email = htmlspecialchars($_POST['email']);
+            $password = htmlspecialchars($_POST['mdp']);
+            $confirmpassword = htmlspecialchars($_POST['mdpConf']);
+            $tel = htmlspecialchars($_POST['tel']);
 
             // Pour l'instant, rediriger vers la page de connexion après "inscription"
             if ($password === $confirmpassword) {

@@ -22,8 +22,8 @@ class C_connexion extends C_base
 
     public function action_connexion()
     {
-        $email = $_POST['login'];
-        $password = $_POST['mdp'];
+        $email = htmlspecialchars($_POST['login']);
+        $password = htmlspecialchars($_POST['mdp']);
 
         $user = $this->modeleUtilisateur->ConnexionUtilisateur($email, $password);
         

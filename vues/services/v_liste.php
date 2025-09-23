@@ -9,7 +9,7 @@
     </div>
 
     <?php
-    // Base query string for links (without pageNum so we can override it)
+    // Base query string for links
     $queryBase = "page=listeServices";
     if (!empty($orderBy)) {
         $queryBase .= "&orderBy=" . urlencode($orderBy) . "&direction=" . urlencode($direction);
@@ -23,14 +23,14 @@
                 <?php
                 $columns = [
                     'sce_code' => 'ID',
-                    'sce_designation' => 'Designation',
-                    'nb_employes' => 'Nombre d\'employées'
+                    'sce_designation' => 'Désignation',
+                    'nb_employes' => 'Nombre d\'employés'
                 ];
                 ?>
                 <?php foreach ($columns as $colKey => $colLabel): ?>
                     <th scope="col">
                         <a href="index.php?page=listeServices&orderBy=<?= $colKey ?>&direction=<?= ($orderBy === $colKey && $direction === 'ASC') ? 'DESC' : 'ASC' ?>&pageNum=<?= $this->data['pageNum'] ?>"
-                        class="text-light">
+                           class="text-light">
                             <?= $colLabel ?>
                             <?php if ($orderBy === $colKey): ?>
                                 <i class="bi bi-caret-<?= ($direction === 'ASC') ? 'down' : 'up' ?>-fill"></i>
@@ -52,16 +52,15 @@
                     <?php if ($this->data['isLoggedOn']): ?>
                         <td>
                             <a href="index.php?page=modifierService&code=<?= urlencode($service->GetCode()); ?>" 
-                               class="btn btn-primary btn-sm" data-bs-title="Edit this service">
+                               class="btn btn-primary btn-sm" data-bs-title="Modifier ce service">
                                <i class="bi bi-pencil"></i>
                             </a>
                             <a href="#" 
-                               class="btn btn-danger btn-sm delete-btn" 
+                               class="btn btn-danger btn-sm" 
                                data-bs-toggle="modal" 
-                               data-bs-target="#confirmModal" 
+                               data-bs-target="#deleteServiceModal" 
                                data-href="index.php?page=supprimerService&code=<?= urlencode($service->GetCode()); ?>" 
-                               data-bs-title="Delete this service" 
-                               data-body="Are you sure you want to delete the service <?= htmlspecialchars($service->GetDesignation()); ?>?">
+                               data-body="Voulez-vous vraiment supprimer le service « <?= htmlspecialchars($service->GetDesignation()); ?> » ?">
                                <i class="bi bi-trash"></i>
                             </a>
                         </td>
@@ -84,7 +83,7 @@
         <ul class="pagination justify-content-center">
             <!-- Previous button -->
             <li class="page-item <?= $this->data['pageNum'] == 1 ? 'disabled' : '' ?>">
-                <a class="page-link" href="index.php?<?= $queryBase ?>&pageNum=<?= $this->data['pageNum']-1 ?>">Previous</a>
+                <a class="page-link" href="index.php?<?= $queryBase ?>&pageNum=<?= $this->data['pageNum']-1 ?>">Précédent</a>
             </li>
 
             <!-- Page numbers -->
@@ -96,11 +95,30 @@
 
             <!-- Next button -->
             <li class="page-item <?= $this->data['pageNum'] == $this->data['totalPages'] ? 'disabled' : '' ?>">
-                <a class="page-link" href="index.php?<?= $queryBase ?>&pageNum=<?= $this->data['pageNum']+1 ?>">Next</a>
+                <a class="page-link" href="index.php?<?= $queryBase ?>&pageNum=<?= $this->data['pageNum']+1 ?>">Suivant</a>
             </li>
         </ul>
     </nav>
     <?php endif; ?>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteServiceModal" tabindex="-1" aria-labelledby="deleteServiceModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteServiceModalLabel">Confirmer la suppression</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        Êtes-vous sûr de vouloir supprimer ce service ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <a href="#" id="confirmDeleteServiceBtn" class="btn btn-danger">Supprimer</a>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -115,6 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
+    // Live search
     searchInput.addEventListener("keyup", function () {
         const filter = normalize(this.value);
         let visibleCount = 0;
@@ -143,5 +162,36 @@ document.addEventListener("DOMContentLoaded", function () {
         searchInput.value = "";
         searchInput.dispatchEvent(new Event("keyup"));
     });
+
+    // Delete confirmation modal
+    const deleteModal = document.getElementById('deleteServiceModal');
+    const confirmBtn = document.getElementById('confirmDeleteServiceBtn');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const href = button.getAttribute('data-href');
+        confirmBtn.setAttribute('href', href);
+
+        const body = button.getAttribute('data-body');
+        if (body) {
+            deleteModal.querySelector('.modal-body').textContent = body;
+        }
+    });
 });
 </script>
+
+<?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'success'): ?>
+    <?php 
+        $modalId = "successModal";
+        $title = "Succès";
+        $body = $this->data['leMessage'];
+        $cancelText = "Fermer";
+        require "vues/partiels/v_modalSuccess.php";
+    ?>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
+            errorModal.show();
+        });
+    </script>
+<?php endif; ?>

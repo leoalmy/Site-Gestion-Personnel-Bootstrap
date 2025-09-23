@@ -17,10 +17,11 @@
 
         public function action_listeEmployes($codeService)
         {
+            $msg = $_GET['msg'] ?? null;
             // --- Messages ---
-            if (!empty($_GET['msg'])) {
+            if (!empty($msg)) {
                 $this->data['typeMessage'] = "success";
-                switch ($_GET['msg']) {
+                switch ($msg) {
                     case 'deleted':
                         $this->data['leMessage'] = "L'employé a été supprimé avec succès.";
                         break;
@@ -34,8 +35,11 @@
             }
 
             // --- Sorting ---
-            $orderBy = $_GET['orderBy'] ?? 'emp_matricule';
-            $direction = $_GET['direction'] ?? 'ASC';
+            $validOrderBy = ['emp_matricule', 'emp_nom', 'emp_prenom', 'emp_service']; 
+            $orderBy = in_array($_GET['orderBy'] ?? '', $validOrderBy) ? $_GET['orderBy'] : 'emp_matricule';
+
+            $validDirection = ['ASC', 'DESC'];
+            $direction = in_array(strtoupper($_GET['direction'] ?? ''), $validDirection) ? strtoupper($_GET['direction']) : 'ASC';
 
             // --- Pagination setup ---
             $rowsPerPage = 8; // change to how many rows per page
@@ -60,9 +64,6 @@
 
             // --- Render views ---
             require_once "vues/partiels/v_entete.php";
-            if (isset($_GET['msg'])) {
-                require_once "vues/partiels/v_message.php";
-            }
             require_once "vues/employes/v_liste.php";
             require_once "vues/partiels/v_piedPage.php";
         }

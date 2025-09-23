@@ -10,8 +10,10 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
       </div>
       <div class="modal-body">
-        <?= $body ?? 'Une erreur est survenue. Veuillez réessayer plus tard.' ?>
-      </div>
+      <?= !empty($body)
+          ? nl2br(htmlspecialchars($body, ENT_QUOTES, 'UTF-8'))
+          : 'Une erreur est survenue. Veuillez réessayer plus tard.' ?>
+    </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
           <?= $cancelText ?? 'Fermer' ?>

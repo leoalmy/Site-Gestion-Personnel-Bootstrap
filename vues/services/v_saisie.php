@@ -4,16 +4,17 @@
     <form action="index.php?page=ajoutService" method="post" id="addForm">
         <div class="mb-3">
             <label for="code" class="form-label">Code :</label>
-            <input type="text" class="form-control" id="code" name="code"
-                value="<?= $this->data['nextCode'] ?>" disabled>
+            <input type="text" class="form-control" id="code"
+                value="<?= htmlspecialchars($this->data['nextCode']) ?>" disabled>
         </div>
 
         <div class="mb-3">
             <label for="designation" class="form-label">Désignation :</label>
-            <input type="text" class="form-control" id="designation" name="designation" maxlength="50" required>
+            <input type="text" class="form-control" id="designation" name="designation"
+                   maxlength="100" required>
         </div>
 
-        <!-- Trigger modal instead of direct submit -->
+        <!-- Bouton qui ouvre le modal de confirmation -->
         <button type="button" class="btn btn-primary" id="openAddModal">
             Enregistrer
         </button>
@@ -21,7 +22,6 @@
 </div>
 
 <?php
-    // Reusable modal
     $modalId = "confirmAddModal";
     $title   = "Confirmer l'ajout";
     $body    = "Voulez-vous vraiment ajouter ce service ?";
@@ -38,8 +38,25 @@
 
         showConfirmModal({
             modalId: "confirmAddModal",
-            bodyText: `Voulez-vous vraiment ajouter le service ${designation} ?`,
+            bodyText: `Voulez-vous vraiment ajouter le service « ${designation} » ?`,
             onConfirm: () => document.getElementById("addForm").submit()
         });
     });
 </script>
+
+<?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'error'): ?>
+    <?php 
+        $modalId = "errorModal";
+        $title = "Erreur";
+        $body = $this->data['leMessage'];
+        $cancelText = "Fermer";
+        require "vues/partiels/v_modalError.php";
+    ?>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
+            errorModal.show();
+        });
+    </script>
+<?php endif; ?>

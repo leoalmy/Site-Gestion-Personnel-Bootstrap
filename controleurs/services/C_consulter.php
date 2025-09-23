@@ -63,9 +63,6 @@ class C_consulterServices extends C_base
         $this->data['direction']     = $direction;
 
         require_once "vues/partiels/v_entete.php";
-        if (isset($_GET['msg'])) {
-            require_once "vues/partiels/v_message.php";
-        }
         require_once "vues/services/v_liste.php";
         require_once "vues/partiels/v_modalConfirm.php";
         require_once "vues/partiels/v_piedPage.php";

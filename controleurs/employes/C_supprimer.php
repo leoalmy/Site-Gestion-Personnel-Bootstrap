@@ -4,6 +4,7 @@ require_once "modeles/M_employe.php";
 
 class C_supprimerEmploye extends C_base
 {
+    private $controleurMenu;
     private $modeleEmploye;
 
     public function __construct()

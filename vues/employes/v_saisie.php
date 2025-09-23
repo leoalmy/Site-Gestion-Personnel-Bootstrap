@@ -84,3 +84,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 </script>
+
+<?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'error'): ?>
+    <?php 
+        $modalId = "errorModal";
+        $title = "Erreur";
+        $body = $this->data['leMessage'];
+        $cancelText = "Fermer";
+        require "vues/partiels/v_modalError.php";
+    ?>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
+            errorModal.show();
+        });
+    </script>
+<?php endif; ?>
