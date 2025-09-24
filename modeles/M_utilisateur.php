@@ -73,4 +73,36 @@ class M_utilisateur extends M_generique
         }
         return false;
     }
+
+    public function GetAllUtilisateurs()
+    {
+        try {
+            $this->connexion('auth');
+            $cnx = $this->getCnx('auth');
+
+            $stmt = $cnx->prepare("SELECT nom, prenom, email, telephone, dateInscription, role 
+                                FROM user ORDER BY dateInscription DESC");
+            $stmt->execute();
+
+            $users = [];
+            while ($row = $stmt->fetch()) {
+                $users[] = new Utilisateurs(
+                    $row['nom'],
+                    $row['prenom'],
+                    $row['email'],
+                    $row['dateInscription'],
+                    $row['role'],
+                    $row['telephone']
+                );
+            }
+
+            $this->deconnexion();
+            return $users;
+
+        } catch (\Exception $e) {
+            $this->deconnexion();
+            echo "Erreur : " . $e->getMessage();
+            return [];
+        }
+    }
 }

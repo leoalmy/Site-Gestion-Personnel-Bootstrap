@@ -8,6 +8,90 @@
     transform: scale(1.05);
 }
 
+.card-container {
+    perspective: 1500px;
+    margin: auto;
+    border-radius: 40px;
+    width: 100%;
+    max-width: 320px; /* taille max d'une carte */
+}
+
+.card {
+    width: 100%;
+    height: 400px; /* hauteur uniforme */
+    transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+    transform-style: preserve-3d;
+    position: relative;
+    cursor: pointer;
+    border-radius: 40px;
+}
+
+.card-face {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    border-radius: 40px;
+    padding: 1rem;
+}
+
+/* Desktop: flip on hover */
+@media (hover: hover) and (pointer: fine) {
+    .card:hover {
+        transform: rotateY(180deg);
+    }
+}
+
+/* Mobile: flip only when "is-flipped" is added */
+.card.is-flipped {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    overflow-y: auto; /* just in case list is long */
+}
+
+.card-back ul li {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    word-break: break-word; /* prevents long email/phone from breaking layout */
+}
+
+.card-back i {
+    font-size: 1.1rem;
+    flex-shrink: 0; /* keeps icons fixed size */
+}
+
+/* By default, hide mobile hint */
+.hint-mobile {
+    display: none;
+}
+
+/* On devices without hover (touch devices), swap */
+@media (hover: none) and (pointer: coarse) {
+    .hint-desktop {
+        display: none;
+    }
+    .hint-mobile {
+        display: inline;
+    }
+}
+
+
 #employeTable thead th,
 #serviceTable thead th {
     position: sticky;

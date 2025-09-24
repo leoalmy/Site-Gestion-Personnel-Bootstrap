@@ -3,7 +3,7 @@
     <div class="hero-banner position-relative text-center text-light">
         <img src="<?= $this->data['image_accueil'] ?>" class="img-fluid w-100" alt="Image d'accueil">
         <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
-            <h1 class="display-5 fw-bold">Pour toute question ou souci, nos étudiants du SIO sont là pour vous aider ! </h1>
+            <h1 class="display-5 fw-bold">Pour toutes questions ou soucis, nos étudiants du SIO sont là pour vous aider ! </h1>
         </div>
     </div>
 <?php else: ?>
@@ -13,7 +13,7 @@
             <img src="<?= $this->data['image_accueil'] ?>" class="card-img-top img-fluid" alt="Image d'accueil alternative">
             <hr class="my-0">
             <div class="card-body">
-                <p class="fs-4 fw-semibold mb-0">Pour toute question ou souci, nos étudiants du SIO sont là pour vous aider ! </p>
+                <p class="fs-4 fw-semibold mb-0">Pour toutes questions ou soucis, nos étudiants du SIO sont là pour vous aider ! </p>
             </div>
         </div>
     </div>

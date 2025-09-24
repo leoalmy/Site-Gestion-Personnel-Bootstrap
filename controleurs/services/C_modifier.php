@@ -40,11 +40,10 @@ class C_modifierService extends C_base
 
     public function action_modifier()
     {
-        $code        = $_POST['code']        ?? '';
+        $code        = $_POST['code']             ?? '';
         $designation = trim($_POST['designation'] ?? '');
         $erreurs = [];
 
-        // Validation
         if (empty($code)) {
             $erreurs[] = "Code du service manquant.";
         }
@@ -66,10 +65,10 @@ class C_modifierService extends C_base
             $this->data['leMessage']   = implode("\n", $erreurs);
         }
 
-        // Réaffichage du formulaire
+        // 🔄 Réaffichage du formulaire avec données existantes
         $this->data['leService'] = $this->modeleService->GetService($code);
+
         require_once "vues/partiels/v_entete.php";
-        require_once "vues/partiels/v_modalError.php";
         require_once "vues/services/v_modifier.php";
         require_once "vues/partiels/v_modalConfirm.php";
         require_once "vues/partiels/v_piedPage.php";

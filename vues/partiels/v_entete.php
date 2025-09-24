@@ -73,7 +73,7 @@
     </div>
     <?php if($this->data['isLoggedOn'] && $this->getCurrentUserRole() == 'admin') { ?>
     <div class="btn-group">
-      <a class="btn btn-primary" role="button"> Comptes </a>
+      <a class="btn btn-primary" role="button" href="index.php?page=consulterComptes"> Comptes </a>
     </div>
     <?php } ?>
 

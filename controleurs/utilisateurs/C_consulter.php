@@ -11,9 +11,13 @@
 
         public function action_afficher()
         {
-            if($this->data['isLoggedOn']) {
+            if ($this->data['isLoggedOn'] && $this->getCurrentUserRole() == 'admin') {
+                require_once "modeles/M_utilisateur.php";
+                $m_user = new M_utilisateur();
+                $users = $m_user->GetAllUtilisateurs();
+
                 require_once "vues/partiels/v_entete.php";
-                require_once "vues/utilisateurs/v_listeComptes.php";
+                require "vues/utilisateurs/v_listeComptes.php"; // pass $users
                 require_once "vues/partiels/v_piedPage.php";
             } else {
                 header("Location: index.php?page=connexion");
