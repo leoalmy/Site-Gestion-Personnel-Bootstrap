@@ -4,39 +4,34 @@ require_once "metiers/Utilisateurs.php";
 
 class M_utilisateur extends M_generique
 {
-    public function AjouterUtilisateur($nom, $prenom, $email, $mdp, $tel)
+    public function AjouterUtilisateur($nom, $prenom, $email, $hashedMdp, $tel)
     {
         try {
             $this->connexion('auth');
             $cnx = $this->getCnx('auth');
 
             // Vérifier si l'email existe déjà
-            $stmt = $cnx->prepare("SELECT COUNT(*) as cnt FROM user WHERE email = :email");
+            $stmt = $cnx->prepare("SELECT COUNT(*) FROM user WHERE email = :email");
             $stmt->execute(['email' => $email]);
-            $count = (int)$stmt->fetchColumn();
-
-            if ($count > 0) {
+            if ($stmt->fetchColumn() > 0) {
                 $this->deconnexion();
                 return false;
             }
 
-            // Hacher le mot de passe
-            $hashedMdp = password_hash($mdp, PASSWORD_BCRYPT);
-
             // Nettoyer le numéro de téléphone
             $tel = preg_replace('/[\s\-]/', '', $tel);
 
-            // Insérer utilisateur
+            // Insérer utilisateur (mot de passe déjà haché dans le controller)
             $stmt = $cnx->prepare("INSERT INTO user 
                 (nom, prenom, email, mdp, telephone, dateInscription, role)
                 VALUES (:nom, :prenom, :email, :mdp, :tel, CURDATE(), 'membre')");
 
             $ok = $stmt->execute([
-                'nom' => $nom,
+                'nom'    => $nom,
                 'prenom' => $prenom,
-                'email' => $email,
-                'mdp' => $hashedMdp,
-                'tel' => $tel
+                'email'  => $email,
+                'mdp'    => $hashedMdp,
+                'tel'    => $tel
             ]);
 
             $this->deconnexion();
@@ -55,7 +50,7 @@ class M_utilisateur extends M_generique
         $cnx = $this->getCnx('auth');
 
         $stmt = $cnx->prepare("SELECT nom, prenom, email, mdp, telephone, dateInscription, role 
-                               FROM user WHERE email = :email");
+                            FROM user WHERE email = :email");
         $stmt->execute(['email' => $email]);
         $row = $stmt->fetch();
 

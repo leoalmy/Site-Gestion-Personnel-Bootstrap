@@ -20,9 +20,9 @@
                 exit();
             } else {
                 $this->data['typeMessage'] = "error";
-                $this->data['leMessage'] = "Erreur lors de la suppression du service.";
+                $this->data['leMessage'] = "❌ Erreur lors de la suppression du service.";
                 require_once "vues/partiels/v_entete.php";
-                require_once "vues/partiels/v_message.php";
+                require_once "vues/partiels/v_modalError.php";
                 require_once "vues/partiels/v_piedPage.php";
             }
         }

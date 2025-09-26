@@ -1,6 +1,6 @@
 <?php
 require_once "controleurs/C_base.php";
-require_once "modeles/M_Utilisateur.php";
+require_once "modeles/M_utilisateur.php";
 
 class C_connexion extends C_base
 {
@@ -14,7 +14,6 @@ class C_connexion extends C_base
 
     public function action_afficher()
     {
-        // Inclure la vue
         require_once "vues/partiels/v_entete.php";
         require_once "vues/utilisateurs/v_connexion.php";
         require_once "vues/partiels/v_piedPage.php";
@@ -23,20 +22,16 @@ class C_connexion extends C_base
     public function action_connexion()
     {
         $email = htmlspecialchars($_POST['login']);
-        $password = htmlspecialchars($_POST['mdp']);
+        $password = $_POST['mdp'];
 
         $user = $this->modeleUtilisateur->ConnexionUtilisateur($email, $password);
-        
+
         if ($user) {
             $_SESSION['user'] = $user;
             header("Location: index.php?page=profil");
+            exit();
         } else {
-            $this->data['typeMessage'] = "error";
-            $this->data['leMessage'] = "❌ Email ou mot de passe incorrect.";
-            $this->action_afficher();
+            $this->afficherErreur("❌ Email ou mot de passe incorrect.");
         }
-
-        exit();
     }
 }
-?>

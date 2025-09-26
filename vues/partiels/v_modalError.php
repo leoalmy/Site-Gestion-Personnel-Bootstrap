@@ -1,3 +1,10 @@
+<?php 
+  $modalId    = $modalId    ?? 'errorModal';
+  $title      = $title      ?? 'Erreur';
+  $body       = $body       ?? $this->data['leMessage'] ?? 'Une erreur est survenue.';
+  $cancelText = $cancelText ?? 'Fermer';
+  $showModal  = true; // always auto-show when required directly
+?>
 <!-- v_modalError.php -->
 <div class="modal fade" id="<?= $modalId ?? 'errorModal' ?>" tabindex="-1" aria-labelledby="<?= $modalId ?? 'errorModal' ?>Label" aria-hidden="true">
   <div class="modal-dialog">
@@ -22,3 +29,23 @@
     </div>
   </div>
 </div>
+
+<?php if (!empty($showModal) && $showModal): ?>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var modalEl = document.getElementById("<?= $modalId ?>");
+    var modal = new bootstrap.Modal(modalEl);
+    modal.show();
+
+    // Optional redirect after X seconds
+    <?php if (!empty($redirectUrl)): ?>
+      modalEl.addEventListener('shown.bs.modal', function () {
+        setTimeout(function () {
+          window.location.href = "<?= $redirectUrl ?>";
+        }, <?= $redirectDelay ?? 3000 ?>); // default 3s
+      });
+    <?php endif; ?>
+  });
+</script>
+<?php endif; ?>
+

@@ -52,10 +52,12 @@
                 $this->data['leService'] = null;
                 $totalRows = $this->modeleEmploye->CountEmployes(); // total rows for all services
                 $this->data['lesEmployes'] = $this->modeleEmploye->GetListe($orderBy, $direction, $offset, $rowsPerPage);
+                $this->data['totalEmployes'] = $totalRows;
             } else {
                 $this->data['leService'] = $this->modeleService->GetService($codeService);
                 $totalRows = $this->modeleEmploye->CountEmployesService($codeService);
                 $this->data['lesEmployes'] = $this->modeleEmploye->GetListeService($codeService, $orderBy, $direction, $offset, $rowsPerPage);
+                $this->data['totalEmployes'] = $totalRows;
             }
 
             // --- Pass pagination info to the view ---

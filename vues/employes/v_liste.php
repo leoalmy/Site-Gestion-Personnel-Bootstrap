@@ -100,7 +100,10 @@
         <tfoot>
             <tr>
                 <td colspan="<?= $this->data['isLoggedOn'] ? 5 : 4 ?>" id="totalCount">
-                    Total: <?= count($this->data['lesEmployes']); ?> employés
+                    <?php
+                        $total = $this->data['totalEmployes'];
+                        echo "Total: $total " . ($total > 1 ? "employés affichés" : "employé affiché") . " sur $total " . ($total > 1 ? "employés" : "employé") . ".";
+                    ?>
                 </td>
             </tr>
         </tfoot>
@@ -183,7 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        totalCell.textContent = "Total: " + visibleCount + (visibleCount > 1 ? " employés" : " employé");
+        totalCell.textContent = "Total: " + visibleCount + (visibleCount > 1 ? " employés affichés" : " employé affiché") + " sur " + <?php echo $this->data['totalEmployes'] ?> + (<?php echo $this->data['totalEmployes'] ?> > 1 ? " employés" : " employé") + ".";
         clearSearch.classList.toggle("d-none", !filter);
     });
 

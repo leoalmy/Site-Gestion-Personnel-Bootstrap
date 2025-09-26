@@ -40,5 +40,26 @@ class C_base
                 return "Aucun rôle";
             }
         }
+
+        public function afficherErreur($message)
+        {
+            if (is_array($message)) {
+                $message = implode("\n", $message);
+            }
+
+            $this->data['typeMessage'] = "error";
+            $this->data['leMessage'] = $message;
+            $this->action_afficher();
+            exit();
+        }
+
+        // Method to fix the action_afficher() error in afficherErreur()
+        public function action_afficher()
+        {
+            // Example: Render an error view or output the error message
+            if (isset($this->data['leMessage'])) {
+                echo "<div class='error'>{$this->data['leMessage']}</div>";
+            }
+        }
     }
 ?>

@@ -25,8 +25,10 @@ class C_modifierEmploye extends C_base
             // ✅ Validation matricule
             if (!preg_match('/^e[0-9]+$/', $matricule)) {
                 $this->data['typeMessage'] = "error";
-                $this->data['leMessage'] = "Matricule non valide.";
-                require_once "vues/partiels/v_message.php";
+                $this->data['leMessage'] = "❌ Matricule non valide.";
+                $redirectUrl = "index.php?service=all&page=listeEmployes";
+                $redirectDelay = 4000;
+                require_once "vues/partiels/v_modalError.php";
             } else {
                 $employe = $this->modeleEmploye->GetEmploye($matricule);
 
@@ -36,14 +38,18 @@ class C_modifierEmploye extends C_base
                     require_once "vues/employes/v_modifier.php";
                 } else {
                     $this->data['typeMessage'] = "error";
-                    $this->data['leMessage'] = "Employé non trouvé.";
-                    require_once "vues/partiels/v_message.php";
+                    $this->data['leMessage'] = "❌ Employé non trouvé.";
+                    $redirectUrl = "index.php?service=all&page=listeEmployes";
+                    $redirectDelay = 4000;
+                    require_once "vues/partiels/v_modalError.php";
                 }
             }
         } else {
             $this->data['typeMessage'] = "error";
-            $this->data['leMessage'] = "Matricule non spécifié.";
-            require_once "vues/partiels/v_message.php";
+            $this->data['leMessage'] = "❌ Matricule non spécifié.";
+            $redirectUrl = "index.php?service=all&page=listeEmployes";
+            $redirectDelay = 4000;
+            require_once "vues/partiels/v_modalError.php";
         }
 
         require_once "vues/partiels/v_piedPage.php";

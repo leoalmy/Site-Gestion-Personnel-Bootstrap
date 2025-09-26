@@ -22,7 +22,7 @@ class C_supprimerEmploye extends C_base
             exit();
         } else {
             $this->data['typeMessage'] = "error";
-            $this->data['leMessage'] = "Erreur lors de la suppression de l'employé.";
+            $this->data['leMessage'] = "❌ Erreur lors de la suppression de l'employé.";
             require_once "vues/partiels/v_entete.php";
             require_once "vues/partiels/v_message.php";
             require_once "vues/partiels/v_piedPage.php";

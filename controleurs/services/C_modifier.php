@@ -26,12 +26,16 @@ class C_modifierService extends C_base
                 require_once "vues/partiels/v_modalConfirm.php";
             } else {
                 $this->data['typeMessage'] = "error";
-                $this->data['leMessage']   = "Service non trouvé.";
+                $this->data['leMessage']   = "❌ Service non trouvé.";
+                $redirectUrl = "index.php?page=listeServices";
+                $redirectDelay = 4000;
                 require_once "vues/partiels/v_modalError.php";
             }
         } else {
             $this->data['typeMessage'] = "error";
-            $this->data['leMessage']   = "Code du service non spécifié.";
+            $this->data['leMessage']   = "❌ Code du service non spécifié.";
+            $redirectUrl = "index.php?page=listeServices";
+            $redirectDelay = 4000;
             require_once "vues/partiels/v_modalError.php";
         }
 
@@ -58,7 +62,7 @@ class C_modifierService extends C_base
                 exit();
             } else {
                 $this->data['typeMessage'] = "error";
-                $this->data['leMessage']   = "Erreur lors de la modification du service.";
+                $this->data['leMessage']   = "❌ Erreur lors de la modification du service.";
             }
         } else {
             $this->data['typeMessage'] = "error";

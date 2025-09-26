@@ -20,7 +20,7 @@
 <?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'error'): ?>
     <?php 
         $modalId = "errorModal";
-        $title = "Erreur d'inscription";
+        $title = "Erreur de connexion";
         $body = $this->data['leMessage'];
         $cancelText = "Fermer";
         require "vues/partiels/v_modalError.php"; 

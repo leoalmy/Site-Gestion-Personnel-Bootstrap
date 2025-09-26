@@ -48,17 +48,11 @@
 
 <?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'error'): ?>
     <?php 
-        $modalId = "errorModal";
-        $title = "Erreur";
-        $body = $this->data['leMessage'];
+        $modalId    = "errorModal";
+        $title      = "Erreur";
+        $body       = $this->data['leMessage'];
         $cancelText = "Fermer";
+        $showModal  = true;   // 👈 tells the partial to auto-show
         require "vues/partiels/v_modalError.php";
     ?>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
-            errorModal.show();
-        });
-    </script>
 <?php endif; ?>
