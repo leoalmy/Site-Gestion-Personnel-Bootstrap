@@ -19,12 +19,13 @@
                 </button>
             </div>
 
-            <!-- Password strength indicator -->
-            <div class="mb-3">
-                <progress id="passwordStrength" value="0" max="100" class="w-100"></progress>
-                <small id="strengthText" class="form-text text-muted"></small>
+            <!-- Bootstrap password strength bar -->
+            <small id="strengthText" class="form-text text-muted"></small>
+            <div class="progress mb-2">
+                <div id="passwordStrength" class="progress-bar" role="progressbar" style="width: 0%">
+                </div>
             </div>
-
+            
             <label for="mdpConf" class="form-label">Confirmer Mot de passe :</label>
             <div class="input-group mb-3">
                 <input type="password" name="mdpConf" id="mdpConf" class="form-control" required />
@@ -63,7 +64,7 @@
 <script>
 document.getElementById("mdp").addEventListener("input", function () {
     const password = this.value;
-    const progress = document.getElementById("passwordStrength");
+    const bar = document.getElementById("passwordStrength");
     const text = document.getElementById("strengthText");
 
     let score = 0;
@@ -74,15 +75,19 @@ document.getElementById("mdp").addEventListener("input", function () {
     if (/[0-9]/.test(password)) score += 15;
     if (/[^A-Za-z0-9]/.test(password)) score += 15;
 
-    progress.value = score;
+    // update bar width
+    bar.style.width = score + "%";
 
     if (score < 50) {
+        bar.className = "progress-bar bg-danger";
         text.textContent = "Faible";
         text.style.color = "red";
     } else if (score < 75) {
+        bar.className = "progress-bar bg-warning";
         text.textContent = "Moyen";
         text.style.color = "orange";
     } else {
+        bar.className = "progress-bar bg-success";
         text.textContent = "Fort";
         text.style.color = "green";
     }

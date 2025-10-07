@@ -11,22 +11,28 @@ class C_supprimerEmploye extends C_base
     {
         parent::__construct();
         $this->controleurMenu = new C_menu();
-        $this->modeleEmploye = new M_employe();
+        $this->modeleEmploye  = new M_employe();
     }
 
     public function action_supprimer($matricule)
     {
         $ok = $this->modeleEmploye->Supprimer($matricule);
         if ($ok) {
-            header("Location: index.php?service=all&page=listeEmployes&msg=deleted");
+            // ✅ redirect back to list with success flag
+            header("Location: index.php?page=listeEmployes&service=all&msg=deleted");
             exit();
         } else {
-            $this->data['typeMessage'] = "error";
-            $this->data['leMessage'] = "❌ Erreur lors de la suppression de l'employé.";
+            // ❌ failure → show modal error and then redirect the list page
+            $modalId = 'errorModal';
+            $title = 'Erreur';
+            $showModal = true;
+            $type = "error";
+            $body = "❌ Erreur lors de la suppression de l'employé.";
+            $redirectUrl = "index.php?page=listeEmployes&service=all";
+            $redirectDelay = 4000;
             require_once "vues/partiels/v_entete.php";
-            require_once "vues/partiels/v_message.php";
+            require_once "vues/partiels/v_modal.php";
             require_once "vues/partiels/v_piedPage.php";
         }
     }
 }
-?>

@@ -64,7 +64,6 @@ class C_consulterServices extends C_base
 
         require_once "vues/partiels/v_entete.php";
         require_once "vues/services/v_liste.php";
-        require_once "vues/partiels/v_modalConfirm.php";
         require_once "vues/partiels/v_piedPage.php";
     }
 }

@@ -19,10 +19,15 @@
                 header("Location: index.php?page=listeServices&msg=deleted");
                 exit();
             } else {
-                $this->data['typeMessage'] = "error";
-                $this->data['leMessage'] = "❌ Erreur lors de la suppression du service.";
+                $modalId = 'errorModal';
+                $title = 'Erreur';
+                $showModal = true;
+                $type = "error";
+                $body = "❌ Erreur lors de la suppression du service.";
+                $redirectUrl = "index.php?page=listeServices";
+                $redirectDelay = 4000;
                 require_once "vues/partiels/v_entete.php";
-                require_once "vues/partiels/v_modalError.php";
+                require_once "vues/partiels/v_modal.php";
                 require_once "vues/partiels/v_piedPage.php";
             }
         }

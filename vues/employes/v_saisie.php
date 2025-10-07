@@ -5,7 +5,7 @@
         <div class="mb-3">
             <label for="matricule" class="form-label">Matricule :</label>
             <input type="text" class="form-control" id="matricule" 
-                value="<?= $this->data['nextMatricule'] ?>" disabled>
+                   value="<?= $this->data['nextMatricule'] ?>" disabled>
         </div>
 
         <div class="mb-3">
@@ -21,12 +21,11 @@
         <div class="mb-3">
             <label for="service" class="form-label">Service :</label>
             <select class="form-select" id="service" name="service" required>
-                <?php
-                foreach ($this->data['lesServices'] as $unService) {
-                    echo '<option value="' . $unService->GetCode() . '">' 
-                        . $unService->GetDesignation() . '</option>';
-                }
-                ?>
+                <?php foreach ($this->data['lesServices'] as $unService): ?>
+                    <option value="<?= $unService->GetCode(); ?>">
+                        <?= $unService->GetDesignation(); ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
         </div>
 
@@ -37,33 +36,23 @@
     </form>
 </div>
 
-<!-- ✅ Modal confirmation -->
-<div class="modal fade" id="confirmAddModal" tabindex="-1" aria-labelledby="confirmAddLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="confirmAddLabel">Confirmer l'ajout</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-      </div>
-      <div class="modal-body">
-        Voulez-vous vraiment ajouter cet employé ?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
-        <button type="button" class="btn btn-success" id="confirmAddBtn">Oui, ajouter</button>
-      </div>
-    </div>
-  </div>
-</div>
+<?php
+// ✅ Generic confirm modal (always available)
+$modalId     = "confirmAddModal";
+$title       = "Confirmer l'ajout";
+$body        = "Voulez-vous vraiment ajouter cet employé ?";
+$type        = "confirm";
+$confirmText = "Oui, ajouter";
+$cancelText  = "Annuler";
+$showModal   = false;
+require "vues/partiels/v_modal.php";
+?>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const openAddModalBtn = document.getElementById("openAddModal");
-    const confirmAddBtn = document.getElementById("confirmAddBtn");
     const addForm = document.getElementById("addForm");
-    const modalBody = document.querySelector("#confirmAddModal .modal-body");
 
-    // Open modal with dynamic name
     openAddModalBtn.addEventListener("click", () => {
         const nom = document.getElementById("nom").value.trim();
         const prenom = document.getElementById("prenom").value.trim();
@@ -73,31 +62,28 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        modalBody.textContent = `Voulez-vous vraiment ajouter l'employé ${prenom} ${nom} ?`;
+        // Define confirm action
+        window.confirmAction = () => addForm.submit();
+
+        // Update modal body dynamically
+        document.querySelector("#confirmAddModal .modal-body").textContent =
+            `Voulez-vous vraiment ajouter l'employé ${prenom} ${nom} ?`;
+
+        // Show modal
         const modal = new bootstrap.Modal(document.getElementById("confirmAddModal"));
         modal.show();
-    });
-
-    // Confirm = submit form
-    confirmAddBtn.addEventListener("click", () => {
-        addForm.submit();
     });
 });
 </script>
 
 <?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'error'): ?>
     <?php 
-        $modalId = "errorModal";
-        $title = "Erreur";
-        $body = $this->data['leMessage'];
+        $modalId    = "errorModal";
+        $title      = "Erreur";
+        $body       = $this->data['leMessage'];
+        $type       = "error";
         $cancelText = "Fermer";
-        require "vues/partiels/v_modalError.php";
+        $showModal  = true;
+        require "vues/partiels/v_modal.php";
     ?>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
-            errorModal.show();
-        });
-    </script>
 <?php endif; ?>

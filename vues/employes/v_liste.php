@@ -2,22 +2,21 @@
     <!-- Page title -->
     <h2>
         <?php
-            $services = [
-                'all' => 'Tous les services',
-                's01' => 'Fabrication',
-                's02' => 'Emballage',
-                's03' => 'Commercial',
-                's04' => 'Administration'
-            ];
+            // Show label, use code in links
+            $currentServiceCode  = "all";
+            $currentServiceLabel = "Tous les services";
 
-            $currentService = 'all';
             if (!empty($this->data['leService'])) {
-                $currentService = $this->data['leService']->GetCode();
+                // assuming your service entity exposes GetCode() + GetDesignation()
+                $currentServiceCode  = $this->data['leService']->GetCode();
+                $currentServiceLabel = $this->data['leService']->GetDesignation();
             }
 
-            echo $currentService === 'all'
-                ? 'Tous les services'
-                : 'Service ' . ($services[$currentService] ?? 'Inconnu');
+            echo htmlspecialchars(
+                $currentServiceLabel === "Tous les services"
+                ? $currentServiceLabel
+                : "Service: " . $currentServiceLabel
+            );
         ?>
     </h2>
 
@@ -34,15 +33,15 @@
                 <?php
                     $columns = [
                         'emp_matricule' => 'Matricule',
-                        'emp_nom' => 'Nom',
-                        'emp_prenom' => 'Prénom',
-                        'emp_service' => 'Service'
+                        'emp_nom'       => 'Nom',
+                        'emp_prenom'    => 'Prénom',
+                        'emp_service'   => 'Service'
                     ];
                 ?>
                 <?php foreach ($columns as $colKey => $colLabel): ?>
                     <th scope="col">
-                        <a href="index.php?page=listeEmployes&service=<?= urlencode($currentService) ?>&orderBy=<?= $colKey ?>&direction=<?= ($orderBy === $colKey && $direction === 'ASC') ? 'DESC' : 'ASC'; ?>&page_num=<?= $this->data['currentPage'] ?>"
-                            class="text-light">
+                        <a href="index.php?page=listeEmployes&service=<?= urlencode($currentServiceCode) ?>&orderBy=<?= $colKey ?>&direction=<?= ($orderBy === $colKey && $direction === 'ASC') ? 'DESC' : 'ASC'; ?>&page_num=<?= $this->data['currentPage'] ?>"
+                           class="text-light">
                             <?= $colLabel ?>
                             <?php if ($orderBy === $colKey): ?>
                                 <i class="bi bi-caret-<?= ($direction === 'ASC') ? 'up' : 'down'; ?>-fill"></i>
@@ -63,8 +62,8 @@
                         case 's01': $btnClass = 'btn-primary'; break;
                         case 's02': $btnClass = 'btn-warning'; break;
                         case 's03': $btnClass = 'btn-success'; break;
-                        case 's04': $btnClass = 'btn-danger'; break;
-                        default: $btnClass = 'btn-dark'; break;
+                        case 's04': $btnClass = 'btn-danger';  break;
+                        default:    $btnClass = 'btn-dark';    break;
                     }
                 ?>
                 <tr>
@@ -89,6 +88,7 @@
                                data-bs-toggle="modal" 
                                data-bs-target="#deleteEmployeeModal" 
                                data-href="index.php?page=supprimerEmploye&matricule=<?= $unEmploye->GetMatricule() ?>" 
+                               data-body="Voulez-vous vraiment supprimer l'employé « <?= htmlspecialchars($unEmploye->GetPrenom() . ' ' . $unEmploye->GetNom()); ?> » ?"
                                data-bs-title="Supprimer cet employé">
                                <i class="bi bi-trash"></i>
                             </a>
@@ -101,8 +101,10 @@
             <tr>
                 <td colspan="<?= $this->data['isLoggedOn'] ? 5 : 4 ?>" id="totalCount">
                     <?php
-                        $total = $this->data['totalEmployes'];
-                        echo "Total: $total " . ($total > 1 ? "employés affichés" : "employé affiché") . " sur $total " . ($total > 1 ? "employés" : "employé") . ".";
+                        $totalRows = count($this->data['lesEmployes']);
+                        $total     = $this->data['totalEmployes'];
+                        echo "Total: $totalRows " . ($totalRows > 1 ? "employés affichés" : "employé affiché") .
+                             " sur $total " . ($total > 1 ? "employés" : "employé") . ".";
                     ?>
                 </td>
             </tr>
@@ -114,46 +116,37 @@
     <nav aria-label="Pagination">
         <ul class="pagination justify-content-center">
             <li class="page-item <?= $this->data['currentPage'] == 1 ? 'disabled' : '' ?>">
-                <a class="page-link" href="index.php?page=listeEmployes&service=<?= urlencode($currentService) ?>&orderBy=<?= urlencode($orderBy) ?>&direction=<?= urlencode($direction) ?>
-&page_num=<?= $this->data['currentPage']-1 ?>">Précédent</a>
+                <a class="page-link" href="index.php?page=listeEmployes&service=<?= urlencode($currentServiceCode) ?>&orderBy=<?= urlencode($orderBy) ?>&direction=<?= urlencode($direction) ?>&page_num=<?= $this->data['currentPage']-1 ?>">Précédent</a>
             </li>
 
             <?php for ($i=1; $i<=$this->data['totalPages']; $i++): ?>
                 <li class="page-item <?= $i==$this->data['currentPage']?'active':'' ?>">
                     <a class="page-link" 
                        aria-current="<?= $i==$this->data['currentPage']?'page':false ?>"
-                       href="index.php?page=listeEmployes&service=<?= urlencode($currentService) ?>&orderBy=<?= urlencode($orderBy) ?>&direction=<?= urlencode($direction) ?>&page_num=<?= $i ?>"><?= $i ?></a>
+                       href="index.php?page=listeEmployes&service=<?= urlencode($currentServiceCode) ?>&orderBy=<?= urlencode($orderBy) ?>&direction=<?= urlencode($direction) ?>&page_num=<?= $i ?>"><?= $i ?></a>
                 </li>
             <?php endfor; ?>
 
             <li class="page-item <?= $this->data['currentPage']==$this->data['totalPages']?'disabled':'' ?>">
-                <a class="page-link" href="index.php?page=listeEmployes&service=<?= urlencode($currentService) ?>&orderBy=<?= urlencode($orderBy) ?>&direction=<?= urlencode($direction) ?>&page_num=<?= $this->data['currentPage']+1 ?>">Suivant</a>
+                <a class="page-link" href="index.php?page=listeEmployes&service=<?= urlencode($currentServiceCode) ?>&orderBy=<?= urlencode($orderBy) ?>&direction=<?= urlencode($direction) ?>&page_num=<?= $this->data['currentPage']+1 ?>">Suivant</a>
             </li>
         </ul>
     </nav>
     <?php endif; ?>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="deleteEmployeeModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteEmployeeModalLabel">Confirmer la suppression</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-      </div>
-      <div class="modal-body">
-        Êtes-vous sûr de vouloir supprimer cet employé ?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Supprimer</a>
-      </div>
-    </div>
-  </div>
-</div>
+<?php
+// ✅ Generic delete confirmation modal
+$modalId     = "deleteEmployeeModal";
+$title       = "Confirmer la suppression";
+$body        = "Êtes-vous sûr de vouloir supprimer cet employé ?";
+$type        = "confirm";
+$confirmText = "Supprimer";
+$cancelText  = "Annuler";
+$showModal   = false;
+require "vues/partiels/v_modal.php";
+?>
 
-<!-- JS for live search and modal -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("searchInput");
@@ -166,6 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
+    // Live search
     searchInput.addEventListener("keyup", function () {
         const filter = normalize(this.value);
         let visibleCount = 0;
@@ -174,8 +168,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const cells = rows[i].getElementsByTagName("td");
             if (cells.length > 0) {
                 const matricule = normalize(cells[0].textContent);
-                const nom = normalize(cells[1].textContent);
-                const prenom = normalize(cells[2].textContent);
+                const nom       = normalize(cells[1].textContent);
+                const prenom    = normalize(cells[2].textContent);
 
                 if (matricule.includes(filter) || nom.includes(filter) || prenom.includes(filter)) {
                     rows[i].style.display = "";
@@ -186,7 +180,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        totalCell.textContent = "Total: " + visibleCount + (visibleCount > 1 ? " employés affichés" : " employé affiché") + " sur " + <?php echo $this->data['totalEmployes'] ?> + (<?php echo $this->data['totalEmployes'] ?> > 1 ? " employés" : " employé") + ".";
+        totalCell.textContent = "Total: " + visibleCount + (visibleCount > 1 ? " employés affichés" : " employé affiché") +
+                                " sur <?= (int)$this->data['totalEmployes'] ?>" +
+                                (<?= (int)$this->data['totalEmployes'] ?> > 1 ? " employés" : " employé") + ".";
         clearSearch.classList.toggle("d-none", !filter);
     });
 
@@ -197,11 +193,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Delete confirmation modal
     const deleteModal = document.getElementById('deleteEmployeeModal');
-    const confirmBtn = document.getElementById('confirmDeleteBtn');
     deleteModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
-        const href = button.getAttribute('data-href');
-        confirmBtn.setAttribute('href', href);
+        const href   = button.getAttribute('data-href');
+
+        // define confirm action dynamically
+        window.confirmAction = () => {
+            window.location.href = href;
+        };
+
+        const body = button.getAttribute('data-body');
+        if (body) {
+            deleteModal.querySelector('.modal-body').textContent = body;
+        }
     });
 
     // Bootstrap tooltips
@@ -212,17 +216,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'success'): ?>
     <?php 
-        $modalId = "successModal";
-        $title = "Succès";
-        $body = $this->data['leMessage'];
+        $modalId    = "successModal";
+        $title      = "Succès";
+        $body       = $this->data['leMessage'];
+        $type       = "success";
         $cancelText = "Fermer";
-        require "vues/partiels/v_modalSuccess.php";
+        $showModal  = true;
+        require "vues/partiels/v_modal.php";
     ?>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
-            errorModal.show();
-        });
-    </script>
 <?php endif; ?>

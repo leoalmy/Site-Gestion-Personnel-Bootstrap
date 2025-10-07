@@ -2,6 +2,7 @@
     require_once "metiers/Utilisateurs.php";
     session_start();
 
+    require_once __DIR__ . "/app/helpers/csrf.php";
     $routes = require __DIR__ . "/config/routes.php";
 
     $page = preg_replace('/[^a-zA-Z0-9_]/', '', $_GET['page'] ?? 'accueil');

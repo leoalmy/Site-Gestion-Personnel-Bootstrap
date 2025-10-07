@@ -22,10 +22,15 @@
 </div>
 
 <?php
-    $modalId = "confirmAddModal";
-    $title   = "Confirmer l'ajout";
-    $body    = "Voulez-vous vraiment ajouter ce service ?";
+$modalId     = "confirmAddModal";
+$title       = "Confirmer l'ajout";
+$body        = "Voulez-vous vraiment ajouter ce service ?";
+$type        = "confirm";
+$confirmText = "Oui, ajouter";
+$cancelText  = "Annuler";
+require "vues/partiels/v_modal.php";
 ?>
+
 
 <script>
     document.getElementById("openAddModal").addEventListener("click", () => {
@@ -33,30 +38,28 @@
 
         if (!designation) {
             alert("Veuillez remplir tous les champs requis.");
-            return; 
+            return;
         }
 
-        showConfirmModal({
-            modalId: "confirmAddModal",
-            bodyText: `Voulez-vous vraiment ajouter le service « ${designation} » ?`,
-            onConfirm: () => document.getElementById("addForm").submit()
-        });
+        window.confirmAction = () => document.getElementById("addForm").submit();
+
+        document.querySelector("#confirmAddModal .modal-body").innerText =
+            `Voulez-vous vraiment ajouter le service « ${designation} » ?`;
+
+        const modal = new bootstrap.Modal(document.getElementById("confirmAddModal"));
+        modal.show();
     });
 </script>
 
 <?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'error'): ?>
     <?php 
-        $modalId = "errorModal";
-        $title = "Erreur";
-        $body = $this->data['leMessage'];
+        $modalId    = "errorModal";
+        $title      = "Erreur";
+        $body       = $this->data['leMessage'];
+        $type       = "error";
         $cancelText = "Fermer";
-        require "vues/partiels/v_modalError.php";
+        $showModal  = true;
+        require "vues/partiels/v_modal.php";
     ?>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
-            errorModal.show();
-        });
-    </script>
 <?php endif; ?>
+

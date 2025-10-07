@@ -22,9 +22,9 @@
             <tr>
                 <?php
                 $columns = [
-                    'sce_code' => 'ID',
+                    'sce_code'        => 'ID',
                     'sce_designation' => 'Désignation',
-                    'nb_employes' => 'Nombre d\'employés'
+                    'nb_employes'     => "Nombre d'employés"
                 ];
                 ?>
                 <?php foreach ($columns as $colKey => $colLabel): ?>
@@ -55,11 +55,11 @@
                                class="btn btn-primary btn-sm" data-bs-title="Modifier ce service">
                                <i class="bi bi-pencil"></i>
                             </a>
-                            <a href="#" 
-                               class="btn btn-danger btn-sm" 
-                               data-bs-toggle="modal" 
-                               data-bs-target="#deleteServiceModal" 
-                               data-href="index.php?page=supprimerService&code=<?= urlencode($service->GetCode()); ?>" 
+                            <a href="#"
+                               class="btn btn-danger btn-sm"
+                               data-bs-toggle="modal"
+                               data-bs-target="#deleteServiceModal"
+                               data-href="index.php?page=supprimerService&code=<?= urlencode($service->GetCode()); ?>"
                                data-body="Voulez-vous vraiment supprimer le service « <?= htmlspecialchars($service->GetDesignation()); ?> » ?">
                                <i class="bi bi-trash"></i>
                             </a>
@@ -81,19 +81,19 @@
     <?php if ($this->data['totalPages'] > 1): ?>
     <nav aria-label="Pagination">
         <ul class="pagination justify-content-center">
-            <!-- Previous button -->
+            <!-- Previous -->
             <li class="page-item <?= $this->data['pageNum'] == 1 ? 'disabled' : '' ?>">
                 <a class="page-link" href="index.php?<?= $queryBase ?>&pageNum=<?= $this->data['pageNum']-1 ?>">Précédent</a>
             </li>
 
-            <!-- Page numbers -->
+            <!-- Numbers -->
             <?php for ($i = 1; $i <= $this->data['totalPages']; $i++): ?>
                 <li class="page-item <?= $i == $this->data['pageNum'] ? 'active' : '' ?>">
                     <a class="page-link" href="index.php?<?= $queryBase ?>&pageNum=<?= $i ?>"><?= $i ?></a>
                 </li>
             <?php endfor; ?>
 
-            <!-- Next button -->
+            <!-- Next -->
             <li class="page-item <?= $this->data['pageNum'] == $this->data['totalPages'] ? 'disabled' : '' ?>">
                 <a class="page-link" href="index.php?<?= $queryBase ?>&pageNum=<?= $this->data['pageNum']+1 ?>">Suivant</a>
             </li>
@@ -102,24 +102,17 @@
     <?php endif; ?>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteServiceModal" tabindex="-1" aria-labelledby="deleteServiceModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteServiceModalLabel">Confirmer la suppression</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-      </div>
-      <div class="modal-body">
-        Êtes-vous sûr de vouloir supprimer ce service ?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <a href="#" id="confirmDeleteServiceBtn" class="btn btn-danger">Supprimer</a>
-      </div>
-    </div>
-  </div>
-</div>
+<?php
+// ✅ Generic delete confirmation modal (always available, never auto-show)
+$modalId     = "deleteServiceModal";
+$title       = "Confirmer la suppression";
+$body        = "Êtes-vous sûr de vouloir supprimer ce service ?";
+$type        = "confirm";
+$confirmText = "Supprimer";
+$cancelText  = "Annuler";
+$showModal   = false;
+require "vues/partiels/v_modal.php";
+?>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -141,9 +134,9 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let i = 1; i < rows.length - 1; i++) {
             const cells = rows[i].getElementsByTagName("td");
             if (cells.length > 0) {
-                const id = normalize(cells[0].textContent);
-                const designation = normalize(cells[1].textContent);
-                const nbEmployes = normalize(cells[2].textContent);
+                const id           = normalize(cells[0].textContent);
+                const designation  = normalize(cells[1].textContent);
+                const nbEmployes   = normalize(cells[2].textContent);
 
                 if (id.includes(filter) || designation.includes(filter) || nbEmployes.includes(filter)) {
                     rows[i].style.display = "";
@@ -155,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         totalCell.textContent = "Total: " + visibleCount + (visibleCount > 1 ? " services" : " service");
-        clearSearch.style.display = filter ? "inline-block" : "none";
+        clearSearch.style.display = this.value ? "inline-block" : "none";
     });
 
     clearSearch.addEventListener("click", function () {
@@ -163,13 +156,16 @@ document.addEventListener("DOMContentLoaded", function () {
         searchInput.dispatchEvent(new Event("keyup"));
     });
 
-    // Delete confirmation modal
+    // Delete confirmation modal (set action + body dynamically)
     const deleteModal = document.getElementById('deleteServiceModal');
-    const confirmBtn = document.getElementById('confirmDeleteServiceBtn');
     deleteModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
-        const href = button.getAttribute('data-href');
-        confirmBtn.setAttribute('href', href);
+        const href   = button.getAttribute('data-href');
+
+        // set confirm action
+        window.confirmAction = () => {
+            window.location.href = href;
+        };
 
         const body = button.getAttribute('data-body');
         if (body) {
@@ -181,17 +177,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'success'): ?>
     <?php 
-        $modalId = "successModal";
-        $title = "Succès";
-        $body = $this->data['leMessage'];
+        $modalId    = "successModal";
+        $title      = "Succès";
+        $body       = $this->data['leMessage'];
+        $type       = "success";
         $cancelText = "Fermer";
-        require "vues/partiels/v_modalSuccess.php";
+        $showModal  = true;
+        require "vues/partiels/v_modal.php";
     ?>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
-            errorModal.show();
-        });
-    </script>
 <?php endif; ?>

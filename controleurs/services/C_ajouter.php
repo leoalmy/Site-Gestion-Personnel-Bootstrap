@@ -17,7 +17,6 @@ class C_ajouterService extends C_base
         $this->data['nextCode'] = $this->modeleService->GenererCode();
         require_once "vues/partiels/v_entete.php";
         require_once "vues/services/v_saisie.php";
-        require_once "vues/partiels/v_modalConfirm.php";
         require_once "vues/partiels/v_piedPage.php";
     }
 
@@ -48,9 +47,7 @@ class C_ajouterService extends C_base
         // Réaffichage du formulaire
         $this->data['nextCode'] = $this->modeleService->GenererCode();
         require_once "vues/partiels/v_entete.php";
-        require_once "vues/partiels/v_modalError.php";
         require_once "vues/services/v_saisie.php";
-        require_once "vues/partiels/v_modalConfirm.php";
         require_once "vues/partiels/v_piedPage.php";
     }
 }

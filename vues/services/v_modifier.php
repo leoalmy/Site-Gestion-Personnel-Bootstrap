@@ -5,45 +5,54 @@
         <div class="mb-3">
             <label for="code" class="form-label">Code :</label>
             <input type="text" class="form-control" id="code" name="code"
-                   value="<?php echo htmlspecialchars($this->data['leService']->GetCode()); ?>"
-                   readonly>
+                   value="<?= htmlspecialchars($this->data['leService']->GetCode()); ?>" readonly>
         </div>
 
         <div class="mb-3">
             <label for="designation" class="form-label">Désignation :</label>
             <input type="text" class="form-control" id="designation" name="designation"
-                   value="<?php echo htmlspecialchars($this->data['leService']->GetDesignation()); ?>" required>
+                   value="<?= htmlspecialchars($this->data['leService']->GetDesignation()); ?>" required>
         </div>
 
-        <!-- Trigger button (opens modal instead of submitting directly) -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmSaveModal">
+        <!-- Trigger confirm modal -->
+        <button type="button" class="btn btn-primary" id="openSaveModal">
             Enregistrer les modifications
         </button>
     </form>
 </div>
 
 <?php
-    // Reusable modal
-    $modalId = "confirmSaveModal";
-    $title   = "Confirmer la modification";
-    $body    = "Voulez-vous vraiment enregistrer les modifications ?";
+// Confirm modal (always available, never auto-show)
+$modalId     = "confirmSaveModal";
+$title       = "Confirmer la modification";
+$body        = "Voulez-vous vraiment enregistrer les modifications ?";
+$type        = "confirm";
+$confirmText = "Oui, enregistrer";
+$cancelText  = "Annuler";
+$showModal   = false;
+require "vues/partiels/v_modal.php";
 ?>
 
 <script>
-    document.querySelector('button[data-bs-target="#confirmSaveModal"]').addEventListener('click', () => {
-        const designation = document.getElementById("designation").value.trim();
+document.getElementById("openSaveModal").addEventListener("click", () => {
+    const designation = document.getElementById("designation").value.trim();
 
-        if (!designation) {
-            alert("Veuillez remplir tous les champs requis.");
-            return; 
-        }
+    if (!designation) {
+        alert("Veuillez remplir tous les champs requis.");
+        return;
+    }
 
-        showConfirmModal({
-            modalId: "confirmSaveModal",
-            bodyText: `Voulez-vous vraiment enregistrer les modifications pour le service ${designation} ?`,
-            onConfirm: () => document.getElementById("editForm").submit()
-        });
-    });
+    // Define confirm callback
+    window.confirmAction = () => document.getElementById("editForm").submit();
+
+    // Update modal body dynamically
+    document.querySelector("#confirmSaveModal .modal-body").innerText =
+        `Voulez-vous vraiment enregistrer les modifications pour le service « ${designation} » ?`;
+
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById("confirmSaveModal"));
+    modal.show();
+});
 </script>
 
 <?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'error'): ?>
@@ -51,8 +60,9 @@
         $modalId    = "errorModal";
         $title      = "Erreur";
         $body       = $this->data['leMessage'];
+        $type       = "error";
         $cancelText = "Fermer";
-        $showModal  = true;   // 👈 tells the partial to auto-show
-        require "vues/partiels/v_modalError.php";
+        $showModal  = true;
+        require "vues/partiels/v_modal.php";
     ?>
 <?php endif; ?>

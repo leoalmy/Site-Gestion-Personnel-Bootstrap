@@ -23,20 +23,25 @@ class C_modifierService extends C_base
             if ($service) {
                 $this->data['leService'] = $service;
                 require_once "vues/services/v_modifier.php";
-                require_once "vues/partiels/v_modalConfirm.php";
             } else {
-                $this->data['typeMessage'] = "error";
-                $this->data['leMessage']   = "❌ Service non trouvé.";
+                $modalId = 'errorModal';
+                $title = 'Erreur';
+                $type = "error";
+                $body = "❌ Service non trouvé.";
                 $redirectUrl = "index.php?page=listeServices";
                 $redirectDelay = 4000;
-                require_once "vues/partiels/v_modalError.php";
+                $showModal = true;
+                require_once "vues/partiels/v_modal.php";
             }
         } else {
-            $this->data['typeMessage'] = "error";
-            $this->data['leMessage']   = "❌ Code du service non spécifié.";
+            $modalId = 'errorModal';
+            $title = 'Erreur';
+            $type = "error";
+            $body = "❌ Code du service manquant.";
             $redirectUrl = "index.php?page=listeServices";
             $redirectDelay = 4000;
-            require_once "vues/partiels/v_modalError.php";
+            $showModal = true;
+            require_once "vues/partiels/v_modal.php";
         }
 
         require_once "vues/partiels/v_piedPage.php";
@@ -74,7 +79,6 @@ class C_modifierService extends C_base
 
         require_once "vues/partiels/v_entete.php";
         require_once "vues/services/v_modifier.php";
-        require_once "vues/partiels/v_modalConfirm.php";
         require_once "vues/partiels/v_piedPage.php";
     }
 }
