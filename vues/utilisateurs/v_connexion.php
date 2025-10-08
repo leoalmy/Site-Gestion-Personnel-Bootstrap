@@ -1,6 +1,7 @@
 <div class="container my-4">
     <h2>Connexion</h2>
     <form action="" method="post">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()); ?>">
         <div>
             <label for="login" class="form-label">Login :</label>
             <input type="text" name="login" id="login" class="form-control" /><br/>

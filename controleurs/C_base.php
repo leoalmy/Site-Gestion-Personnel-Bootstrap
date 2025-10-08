@@ -43,7 +43,7 @@ class C_base
 
         protected function checkCsrf() {
             $token = $_POST['csrf_token'] ?? '';
-            if (verify_csrf_token($token)) {
+            if (!verify_csrf_token($token)) {
                 die('Invalid CRSF token');
             }
         }

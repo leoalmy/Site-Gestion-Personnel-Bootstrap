@@ -57,6 +57,8 @@ class C_modifierEmploye extends C_base
 
     public function action_modifier()
     {
+        $this->checkCsrf();
+        
         $matricule = $_POST['matricule'] ?? '';
         $nom       = trim($_POST['nom'] ?? '');
         $prenom    = trim($_POST['prenom'] ?? '');

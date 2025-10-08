@@ -21,6 +21,8 @@ class C_inscription extends C_base
 
     public function action_inscrire()
     {
+        $this->checkCsrf();
+        
         $nom = htmlspecialchars($_POST['nom']);
         $prenom = htmlspecialchars($_POST['prenom']);
         $email = htmlspecialchars($_POST['email']);

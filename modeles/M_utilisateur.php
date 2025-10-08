@@ -76,7 +76,7 @@ class M_utilisateur extends M_generique
             $cnx = $this->getCnx('auth');
 
             $stmt = $cnx->prepare("SELECT nom, prenom, email, telephone, dateInscription, role 
-                                FROM user ORDER BY dateInscription DESC");
+                                FROM user ORDER BY role ASC");
             $stmt->execute();
 
             $users = [];

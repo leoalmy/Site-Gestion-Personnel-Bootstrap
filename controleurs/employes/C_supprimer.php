@@ -14,25 +14,48 @@ class C_supprimerEmploye extends C_base
         $this->modeleEmploye  = new M_employe();
     }
 
-    public function action_supprimer($matricule)
+    public function action_supprimer($matricule = null)
     {
+        // ✅ S'assurer que la requête est bien POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: index.php?page=listeEmployes&service=all");
+            exit();
+        }
+
+        // ✅ Vérifie le token CSRF (méthode héritée de C_base)
+        $this->checkCsrf();
+
+        // ✅ Récupère le matricule depuis POST si non fourni
+        if (empty($matricule)) {
+            $matricule = $_POST['matricule'] ?? null;
+        }
+
+        if (empty($matricule)) {
+            $this->showErrorModal("Matricule manquant pour la suppression.");
+            return;
+        }
+
+        // ✅ Supprime l’employé
         $ok = $this->modeleEmploye->Supprimer($matricule);
         if ($ok) {
-            // ✅ redirect back to list with success flag
-            header("Location: index.php?page=listeEmployes&service=all&msg=deleted");
+            header("Location: index.php?page=listeEmployes&typeMessage=success&leMessage=" . urlencode("Employé supprimé avec succès"));
             exit();
         } else {
-            // ❌ failure → show modal error and then redirect the list page
-            $modalId = 'errorModal';
-            $title = 'Erreur';
-            $showModal = true;
-            $type = "error";
-            $body = "❌ Erreur lors de la suppression de l'employé.";
-            $redirectUrl = "index.php?page=listeEmployes&service=all";
-            $redirectDelay = 4000;
-            require_once "vues/partiels/v_entete.php";
-            require_once "vues/partiels/v_modal.php";
-            require_once "vues/partiels/v_piedPage.php";
+            $this->showErrorModal("❌ Erreur lors de la suppression de l'employé.");
         }
+    }
+
+    private function showErrorModal(string $message)
+    {
+        $modalId = 'errorModal';
+        $title = 'Erreur';
+        $showModal = true;
+        $type = "error";
+        $body = $message;
+        $redirectUrl = "index.php?page=listeEmployes&service=all";
+        $redirectDelay = 4000;
+        require_once "vues/partiels/v_entete.php";
+        require_once "vues/partiels/v_modal.php";
+        require_once "vues/partiels/v_piedPage.php";
     }
 }

@@ -32,6 +32,8 @@ class C_ajouterEmploye extends C_base
     // --- Traitement du formulaire ---
     public function action_ajout($nom, $prenom, $service)
     {
+        $this->checkCsrf();
+        
         $erreurs = [];
 
         // Validation

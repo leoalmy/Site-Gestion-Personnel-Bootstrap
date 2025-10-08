@@ -14,6 +14,8 @@
 
         public function action_supprimer($code)
         {
+            $this->checkCsrf();
+            
             $ok = $this->modeleService->Supprimer($code);
             if ($ok) {
                 header("Location: index.php?page=listeServices&msg=deleted");

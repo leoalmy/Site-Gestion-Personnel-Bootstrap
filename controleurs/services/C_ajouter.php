@@ -22,6 +22,8 @@ class C_ajouterService extends C_base
 
     public function action_ajout()
     {
+        $this->checkCsrf();
+        
         $designation = trim($_POST['designation'] ?? '');
         $erreurs = [];
 

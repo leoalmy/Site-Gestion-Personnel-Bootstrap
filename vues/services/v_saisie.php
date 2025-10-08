@@ -2,6 +2,7 @@
     <h2 class="mb-4">Ajout d'un service</h2>
 
     <form action="index.php?page=ajoutService" method="post" id="addForm">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()); ?>">
         <div class="mb-3">
             <label for="code" class="form-label">Code :</label>
             <input type="text" class="form-control" id="code"

@@ -1,6 +1,7 @@
 <div class="container my-4">
     <h2>Inscription</h2>
     <form action="index.php?page=inscription&action=inscrire" method="post">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()); ?>">
         <div>
             <label for="nom" class="form-label">Nom :</label>
             <input type="text" name="nom" id="nom" class="form-control" required /><br/>
@@ -44,22 +45,18 @@
     </form>
 </div>
 
-<?php if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'error'): ?>
-    <?php 
+<?php 
+if (!empty($this->data['typeMessage']) && $this->data['typeMessage'] === 'error')
+    {
         $modalId = "errorModal";
         $title = "Erreur d'inscription";
         $body = $this->data['leMessage'];
+        $type       = "error";
         $cancelText = "Fermer";
-        require "vues/partiels/v_modalError.php"; 
-    ?>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var errorModal = new bootstrap.Modal(document.getElementById("<?= $modalId ?>"));
-            errorModal.show();
-        });
-    </script>
-<?php endif; ?>
+        $showModal  = true;
+        require "vues/partiels/v_modal.php";
+    }
+?>
 
 <script>
 document.getElementById("mdp").addEventListener("input", function () {

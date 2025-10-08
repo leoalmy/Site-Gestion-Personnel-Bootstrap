@@ -2,6 +2,7 @@
     <h2 class="mb-4">Modifier un service</h2>
 
     <form id="editForm" action="index.php?page=modifierService" method="post">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()); ?>">
         <div class="mb-3">
             <label for="code" class="form-label">Code :</label>
             <input type="text" class="form-control" id="code" name="code"

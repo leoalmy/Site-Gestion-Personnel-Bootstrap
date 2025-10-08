@@ -49,6 +49,8 @@ class C_modifierService extends C_base
 
     public function action_modifier()
     {
+        $this->checkCsrf();
+        
         $code        = $_POST['code']             ?? '';
         $designation = trim($_POST['designation'] ?? '');
         $erreurs = [];

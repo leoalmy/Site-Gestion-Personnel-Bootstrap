@@ -2,6 +2,7 @@
     <h2 class="mb-4">Modifier un employé</h2>
 
     <form id="editForm" action="index.php?page=modifierEmploye" method="post">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()); ?>">
         <div class="mb-3">
             <label for="matricule" class="form-label">Matricule :</label>
             <input type="text" class="form-control" id="matricule" name="matricule"

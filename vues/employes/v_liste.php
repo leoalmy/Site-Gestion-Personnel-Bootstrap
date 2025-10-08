@@ -83,14 +83,14 @@
                                class="btn btn-info btn-sm me-2" data-bs-title="Modifier cet employé">
                                <i class="bi bi-pencil"></i>
                             </a>
-                            <a href="#" 
-                               class="btn btn-danger btn-sm" 
-                               data-bs-toggle="modal" 
-                               data-bs-target="#deleteEmployeeModal" 
-                               data-href="index.php?page=supprimerEmploye&matricule=<?= $unEmploye->GetMatricule() ?>" 
-                               data-body="Voulez-vous vraiment supprimer l'employé « <?= htmlspecialchars($unEmploye->GetPrenom() . ' ' . $unEmploye->GetNom()); ?> » ?"
-                               data-bs-title="Supprimer cet employé">
-                               <i class="bi bi-trash"></i>
+                            <a href="#"
+                                class="btn btn-danger btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteEmployeeModal"
+                                data-matricule="<?= htmlspecialchars($unEmploye->GetMatricule()) ?>"
+                                data-body="Voulez-vous vraiment supprimer l'employé « <?= htmlspecialchars($unEmploye->GetPrenom() . ' ' . $unEmploye->GetNom()); ?> » ?"
+                                data-bs-title="Supprimer cet employé">
+                                <i class="bi bi-trash"></i>
                             </a>
                         </td>
                     <?php endif; ?>
@@ -147,6 +147,12 @@ $showModal   = false;
 require "vues/partiels/v_modal.php";
 ?>
 
+<!-- 🔒 Hidden secure delete form -->
+<form id="deleteForm" method="POST" action="index.php?page=supprimerEmploye" style="display:none;">
+    <input type="hidden" name="matricule" id="deleteMatricule">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()); ?>">
+</form>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("searchInput");
@@ -195,11 +201,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const deleteModal = document.getElementById('deleteEmployeeModal');
     deleteModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
-        const href   = button.getAttribute('data-href');
+        const matricule = button.getAttribute('data-matricule');
+        document.getElementById('deleteMatricule').value = matricule;
+
 
         // define confirm action dynamically
         window.confirmAction = () => {
-            window.location.href = href;
+            document.getElementById('deleteForm').submit();
         };
 
         const body = button.getAttribute('data-body');

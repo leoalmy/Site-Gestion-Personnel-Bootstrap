@@ -21,6 +21,8 @@ class C_connexion extends C_base
 
     public function action_connexion()
     {
+        $this->checkCsrf();
+        
         $email = htmlspecialchars($_POST['login']);
         $password = $_POST['mdp'];
 
