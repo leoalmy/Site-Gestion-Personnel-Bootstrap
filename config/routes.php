@@ -1,11 +1,11 @@
 <?php
-
 return [
     "accueil" => [
         "file" => "controleurs/C_accueil.php",
         "class" => "C_accueil",
         "method" => "action_afficher",
         "protected" => false,
+        "role_required" => null,
         "params" => []
     ],
 
@@ -14,6 +14,7 @@ return [
         "class" => "C_consulterEmployes",
         "method" => "action_listeEmployes",
         "protected" => false,
+        "role_required" => null,
         "params" => [
             ["source" => "get", "name" => "service"]
         ]
@@ -24,6 +25,7 @@ return [
         "class" => "C_ajouterEmploye",
         "method" => "action_saisie",
         "protected" => true,
+        "role_required" => "ROLE_EDITOR",
         "params" => []
     ],
 
@@ -32,6 +34,7 @@ return [
         "class" => "C_ajouterEmploye",
         "method" => "action_ajout",
         "protected" => true,
+        "role_required" => "ROLE_EDITOR",
         "params" => [
             ["source" => "post", "name" => "nom"],
             ["source" => "post", "name" => "prenom"],
@@ -44,6 +47,7 @@ return [
         "class" => "C_supprimerEmploye",
         "method" => "action_supprimer",
         "protected" => true,
+        "role_required" => "ROLE_ADMIN",
         "params" => [
             ["source" => "get", "name" => "matricule"]
         ]
@@ -57,6 +61,7 @@ return [
             "post" => "action_modifier"
         ],
         "protected" => true,
+        "role_required" => "ROLE_EDITOR",
         "params" => []
     ],
 
@@ -65,6 +70,7 @@ return [
         "class" => "C_consulterServices",
         "method" => "action_listeServices",
         "protected" => false,
+        "role_required" => null,
         "params" => []
     ],
 
@@ -73,6 +79,7 @@ return [
         "class" => "C_ajouterService",
         "method" => "action_saisie",
         "protected" => true,
+        "role_required" => "ROLE_EDITOR",
         "params" => []
     ],
 
@@ -81,6 +88,7 @@ return [
         "class" => "C_ajouterService",
         "method" => "action_ajout",
         "protected" => true,
+        "role_required" => "ROLE_EDITOR",
         "params" => [
             ["source" => "post", "name" => "designation"]
         ]
@@ -91,6 +99,7 @@ return [
         "class" => "C_supprimerService",
         "method" => "action_supprimer",
         "protected" => true,
+        "role_required" => "ROLE_ADMIN",
         "params" => [
             ["source" => "get", "name" => "code"]
         ]
@@ -104,6 +113,7 @@ return [
             "post" => "action_modifier"
         ],
         "protected" => true,
+        "role_required" => "ROLE_EDITOR",
         "params" => []
     ],
 
@@ -115,6 +125,7 @@ return [
             "post" => "action_connexion"
         ],
         "protected" => false,
+        "role_required" => null,
         "params" => []
     ],
 
@@ -123,6 +134,7 @@ return [
         "class" => "C_deconnexion",
         "method" => "action_deconnexion",
         "protected" => true,
+        "role_required" => "ROLE_MEMBRE",
         "params" => []
     ],
 
@@ -134,6 +146,7 @@ return [
             "post" => "action_inscrire"
         ],
         "protected" => false,
+        "role_required" => null,
         "params" => []
     ],
 
@@ -142,6 +155,7 @@ return [
         "class" => "C_profil",
         "method" => "action_afficher",
         "protected" => true,
+        "role_required" => "ROLE_MEMBRE",
         "params" => []
     ],
 
@@ -150,6 +164,7 @@ return [
         "class" => "C_consulter",
         "method" => "action_afficher",
         "protected" => true,
+        "role_required" => "ROLE_ADMIN",
         "params" => []
     ]
 ];

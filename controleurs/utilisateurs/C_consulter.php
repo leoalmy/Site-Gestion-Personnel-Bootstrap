@@ -11,7 +11,7 @@
 
         public function action_afficher()
         {
-            if ($this->data['isLoggedOn'] && $this->getCurrentUserRole() == 'admin') {
+            if ($this->data['isLoggedOn'] && $this->getCurrentUserRole() == 'ROLE_ADMIN') {
                 require_once "modeles/M_utilisateur.php";
                 $m_user = new M_utilisateur();
                 $users = $m_user->GetAllUtilisateurs();
