@@ -18,11 +18,6 @@
           <i class="bi bi-instagram fs-4"></i>
         </a>
       </li>
-      <li class="ms-3">
-        <a class="text-light" href="https://www.facebook.com/people/Lycée-Edouard-Gand-cité-scolaire/" aria-label="Facebook">
-          <i class="bi bi-facebook fs-4"></i>
-        </a>
-      </li>
     </ul>
 
   </div>
